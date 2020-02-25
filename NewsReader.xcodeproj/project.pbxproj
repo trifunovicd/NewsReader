@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B96C2FA4240514B20039C10B /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA3240514B20039C10B /* News.swift */; };
+		B96C2FA6240515D50039C10B /* ArticleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA5240515D50039C10B /* ArticleRequest.swift */; };
+		B96C2FA8240526D70039C10B /* ArticlesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA7240526D70039C10B /* ArticlesTableViewController.swift */; };
+		B96C2FAA240528DE0039C10B /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA9240528DE0039C10B /* ArticleTableViewCell.swift */; };
+		B96C2FAC240548610039C10B /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FAB240548610039C10B /* CustomImageView.swift */; };
 		B9835CF22405064A00EE6F32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835CF12405064A00EE6F32 /* AppDelegate.swift */; };
 		B9835CF42405064A00EE6F32 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835CF32405064A00EE6F32 /* SceneDelegate.swift */; };
 		B9835CF62405064A00EE6F32 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835CF52405064A00EE6F32 /* ViewController.swift */; };
@@ -35,6 +40,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B96C2FA3240514B20039C10B /* News.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
+		B96C2FA5240515D50039C10B /* ArticleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleRequest.swift; sourceTree = "<group>"; };
+		B96C2FA7240526D70039C10B /* ArticlesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesTableViewController.swift; sourceTree = "<group>"; };
+		B96C2FA9240528DE0039C10B /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
+		B96C2FAB240548610039C10B /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		B9835CEE2405064A00EE6F32 /* NewsReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9835CF12405064A00EE6F32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B9835CF32405064A00EE6F32 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -101,7 +111,12 @@
 			children = (
 				B9835CF12405064A00EE6F32 /* AppDelegate.swift */,
 				B9835CF32405064A00EE6F32 /* SceneDelegate.swift */,
+				B96C2FA3240514B20039C10B /* News.swift */,
+				B96C2FA5240515D50039C10B /* ArticleRequest.swift */,
+				B96C2FAB240548610039C10B /* CustomImageView.swift */,
 				B9835CF52405064A00EE6F32 /* ViewController.swift */,
+				B96C2FA9240528DE0039C10B /* ArticleTableViewCell.swift */,
+				B96C2FA7240526D70039C10B /* ArticlesTableViewController.swift */,
 				B9835CF72405064A00EE6F32 /* Main.storyboard */,
 				B9835CFA2405064B00EE6F32 /* Assets.xcassets */,
 				B9835CFC2405064B00EE6F32 /* LaunchScreen.storyboard */,
@@ -259,9 +274,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B96C2FA8240526D70039C10B /* ArticlesTableViewController.swift in Sources */,
 				B9835CF62405064A00EE6F32 /* ViewController.swift in Sources */,
 				B9835CF22405064A00EE6F32 /* AppDelegate.swift in Sources */,
+				B96C2FA4240514B20039C10B /* News.swift in Sources */,
 				B9835CF42405064A00EE6F32 /* SceneDelegate.swift in Sources */,
+				B96C2FAC240548610039C10B /* CustomImageView.swift in Sources */,
+				B96C2FAA240528DE0039C10B /* ArticleTableViewCell.swift in Sources */,
+				B96C2FA6240515D50039C10B /* ArticleRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
