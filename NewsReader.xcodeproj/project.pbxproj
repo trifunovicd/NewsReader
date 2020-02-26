@@ -14,12 +14,13 @@
 		B96C2FAC240548610039C10B /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FAB240548610039C10B /* CustomImageView.swift */; };
 		B9835CF22405064A00EE6F32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835CF12405064A00EE6F32 /* AppDelegate.swift */; };
 		B9835CF42405064A00EE6F32 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835CF32405064A00EE6F32 /* SceneDelegate.swift */; };
-		B9835CF62405064A00EE6F32 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835CF52405064A00EE6F32 /* ViewController.swift */; };
 		B9835CF92405064A00EE6F32 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9835CF72405064A00EE6F32 /* Main.storyboard */; };
 		B9835CFB2405064B00EE6F32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9835CFA2405064B00EE6F32 /* Assets.xcassets */; };
 		B9835CFE2405064B00EE6F32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9835CFC2405064B00EE6F32 /* LaunchScreen.storyboard */; };
 		B9835D092405064C00EE6F32 /* NewsReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835D082405064C00EE6F32 /* NewsReaderTests.swift */; };
 		B9835D142405064C00EE6F32 /* NewsReaderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835D132405064C00EE6F32 /* NewsReaderUITests.swift */; };
+		B9C29562240664FF00828586 /* ArticleCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C29561240664FF00828586 /* ArticleCollectionViewController.swift */; };
+		B9C295642406661200828586 /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C295632406661200828586 /* ArticleCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,7 +49,6 @@
 		B9835CEE2405064A00EE6F32 /* NewsReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9835CF12405064A00EE6F32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B9835CF32405064A00EE6F32 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		B9835CF52405064A00EE6F32 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B9835CF82405064A00EE6F32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B9835CFA2405064B00EE6F32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B9835CFD2405064B00EE6F32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -59,6 +59,8 @@
 		B9835D0F2405064C00EE6F32 /* NewsReaderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewsReaderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9835D132405064C00EE6F32 /* NewsReaderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsReaderUITests.swift; sourceTree = "<group>"; };
 		B9835D152405064C00EE6F32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B9C29561240664FF00828586 /* ArticleCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArticleCollectionViewController.swift; path = ../ArticleCollectionViewController.swift; sourceTree = "<group>"; };
+		B9C295632406661200828586 /* ArticleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,9 +116,10 @@
 				B96C2FA3240514B20039C10B /* News.swift */,
 				B96C2FA5240515D50039C10B /* ArticleRequest.swift */,
 				B96C2FAB240548610039C10B /* CustomImageView.swift */,
-				B9835CF52405064A00EE6F32 /* ViewController.swift */,
 				B96C2FA9240528DE0039C10B /* ArticleTableViewCell.swift */,
 				B96C2FA7240526D70039C10B /* ArticlesTableViewController.swift */,
+				B9C295632406661200828586 /* ArticleCollectionViewCell.swift */,
+				B9C29561240664FF00828586 /* ArticleCollectionViewController.swift */,
 				B9835CF72405064A00EE6F32 /* Main.storyboard */,
 				B9835CFA2405064B00EE6F32 /* Assets.xcassets */,
 				B9835CFC2405064B00EE6F32 /* LaunchScreen.storyboard */,
@@ -159,6 +162,8 @@
 			dependencies = (
 			);
 			name = NewsReader;
+			packageProductDependencies = (
+			);
 			productName = NewsReader;
 			productReference = B9835CEE2405064A00EE6F32 /* NewsReader.app */;
 			productType = "com.apple.product-type.application";
@@ -231,6 +236,8 @@
 				Base,
 			);
 			mainGroup = B9835CE52405064A00EE6F32;
+			packageReferences = (
+			);
 			productRefGroup = B9835CEF2405064A00EE6F32 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -275,13 +282,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B96C2FA8240526D70039C10B /* ArticlesTableViewController.swift in Sources */,
-				B9835CF62405064A00EE6F32 /* ViewController.swift in Sources */,
 				B9835CF22405064A00EE6F32 /* AppDelegate.swift in Sources */,
 				B96C2FA4240514B20039C10B /* News.swift in Sources */,
+				B9C295642406661200828586 /* ArticleCollectionViewCell.swift in Sources */,
 				B9835CF42405064A00EE6F32 /* SceneDelegate.swift in Sources */,
 				B96C2FAC240548610039C10B /* CustomImageView.swift in Sources */,
 				B96C2FAA240528DE0039C10B /* ArticleTableViewCell.swift in Sources */,
 				B96C2FA6240515D50039C10B /* ArticleRequest.swift in Sources */,
+				B9C29562240664FF00828586 /* ArticleCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

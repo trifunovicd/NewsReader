@@ -56,7 +56,7 @@ class ArticlesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? ArticleTableViewCell else{
-            fatalError("The dequeued cell is not an instance of MealTableViewCell.")
+            fatalError("The dequeued cell is not an instance of ArticleTableViewCell.")
         }
         
         let article = articles[indexPath.row]
@@ -69,6 +69,14 @@ class ArticlesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
+        
+        articleCollectionViewController.articles = articles
+        articleCollectionViewController.indexPath = indexPath
+        
+        navigationController?.pushViewController(articleCollectionViewController, animated: true)
     }
     
 
@@ -125,13 +133,6 @@ class ArticlesTableViewController: UITableViewController {
     }
     
     private func loadNews() {
-        //
-//        let oldArticles = loadArticles()
-//        let oldDate = loadDate()
-//        print(oldArticles)
-//        print(oldDate)
-        //
-        
         let articleRequest = ArticleRequest()
         articleRequest.getArticles { [weak self] result in
             switch result {
@@ -139,66 +140,36 @@ class ArticlesTableViewController: UITableViewController {
                 print(error)
             case .success(let articles):
                 self?.articles = articles
-//                self?.saveArticles(articles: articles)
             }
-            
         }
     }
     
-    func saveArticles(articles: [ArticleDetails]){
-        do {
-            let archivedData = try NSKeyedArchiver.archivedData(withRootObject: articles, requiringSecureCoding: true)
-            try archivedData.write(to: Articles.NewsArchiveURL)
-        }catch {
-            os_log(OSLogType.debug, "Faild to save articles... %@", error.localizedDescription)
-        }
-    }
-    
-    func loadArticles() -> [ArticleDetails]? {
-            do{
-                let fileManager = FileManager.default
-                if !fileManager.fileExists(atPath: Articles.NewsArchiveURL.path) {
-                    fileManager.createFile(atPath: Articles.NewsArchiveURL.path, contents: nil, attributes: nil)
-                }
-                
-                let data = try Data(contentsOf: Articles.NewsArchiveURL, options: .alwaysMapped)
-                let archivedArticles = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [ArticleDetails]
-                
-                return archivedArticles
-            }
-            catch{
-                os_log(OSLogType.debug, "Faild to load articles... %@", error.localizedDescription)
-            }
-
-        return nil
-    }
-    
-    func saveDate(){
-        do {
-            let date = Date()
-            let archivedData = try NSKeyedArchiver.archivedData(withRootObject: date, requiringSecureCoding: true)
-            try archivedData.write(to: Articles.DateArchiveURL)
-        }catch {
-            os_log(OSLogType.debug, "Faild to save date... %@", error.localizedDescription)
-        }
-    }
-    
-    func loadDate() -> Date? {
-            do{
-                let fileManager = FileManager.default
-                if !fileManager.fileExists(atPath: Articles.DateArchiveURL.path) {
-                    fileManager.createFile(atPath: Articles.DateArchiveURL.path, contents: nil, attributes: nil)
-                }
-                
-                let data = try Data(contentsOf: Articles.DateArchiveURL, options: .alwaysMapped)
-                let archivedDate = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? Date
-                
-                return archivedDate
-            }
-            catch{
-                os_log(OSLogType.debug, "Faild to load date... %@", error.localizedDescription)
-            }
-
-        return nil
-    }
+//    func saveDate(){
+//        do {
+//            let date = Date()
+//            let archivedData = try NSKeyedArchiver.archivedData(withRootObject: date, requiringSecureCoding: true)
+//            try archivedData.write(to: Articles.DateArchiveURL)
+//        }catch {
+//            os_log(OSLogType.debug, "Faild to save date... %@", error.localizedDescription)
+//        }
+//    }
+//
+//    func loadDate() -> Date? {
+//            do{
+//                let fileManager = FileManager.default
+//                if !fileManager.fileExists(atPath: Articles.DateArchiveURL.path) {
+//                    fileManager.createFile(atPath: Articles.DateArchiveURL.path, contents: nil, attributes: nil)
+//                }
+//
+//                let data = try Data(contentsOf: Articles.DateArchiveURL, options: .alwaysMapped)
+//                let archivedDate = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? Date
+//
+//                return archivedDate
+//            }
+//            catch{
+//                os_log(OSLogType.debug, "Faild to load date... %@", error.localizedDescription)
+//            }
+//
+//        return nil
+//    }
 }

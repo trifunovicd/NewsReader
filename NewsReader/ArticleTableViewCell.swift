@@ -21,7 +21,7 @@ class ArticleTableViewCell: UITableViewCell {
     }()
     
     let articleImageView: CustomImageView = {
-        let image = CustomImageView(image: #imageLiteral(resourceName: "noimage"))
+        let image = CustomImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
