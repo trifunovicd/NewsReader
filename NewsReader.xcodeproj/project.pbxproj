@@ -21,6 +21,7 @@
 		B9835D142405064C00EE6F32 /* NewsReaderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835D132405064C00EE6F32 /* NewsReaderUITests.swift */; };
 		B9C29562240664FF00828586 /* ArticleCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C29561240664FF00828586 /* ArticleCollectionViewController.swift */; };
 		B9C295642406661200828586 /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C295632406661200828586 /* ArticleCollectionViewCell.swift */; };
+		B9FFE4E62407E9D8009FA7AD /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FFE4E52407E9D8009FA7AD /* WebViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		B9835D152405064C00EE6F32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9C29561240664FF00828586 /* ArticleCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArticleCollectionViewController.swift; path = ../ArticleCollectionViewController.swift; sourceTree = "<group>"; };
 		B9C295632406661200828586 /* ArticleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewCell.swift; sourceTree = "<group>"; };
+		B9FFE4E52407E9D8009FA7AD /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				B96C2FA3240514B20039C10B /* News.swift */,
 				B96C2FA5240515D50039C10B /* ArticleRequest.swift */,
 				B96C2FAB240548610039C10B /* CustomImageView.swift */,
+				B9FFE4E52407E9D8009FA7AD /* WebViewController.swift */,
 				B96C2FA9240528DE0039C10B /* ArticleTableViewCell.swift */,
 				B96C2FA7240526D70039C10B /* ArticlesTableViewController.swift */,
 				B9C295632406661200828586 /* ArticleCollectionViewCell.swift */,
@@ -284,6 +287,7 @@
 				B96C2FA8240526D70039C10B /* ArticlesTableViewController.swift in Sources */,
 				B9835CF22405064A00EE6F32 /* AppDelegate.swift in Sources */,
 				B96C2FA4240514B20039C10B /* News.swift in Sources */,
+				B9FFE4E62407E9D8009FA7AD /* WebViewController.swift in Sources */,
 				B9C295642406661200828586 /* ArticleCollectionViewCell.swift in Sources */,
 				B9835CF42405064A00EE6F32 /* SceneDelegate.swift in Sources */,
 				B96C2FAC240548610039C10B /* CustomImageView.swift in Sources */,

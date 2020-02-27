@@ -25,7 +25,17 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
         collectionView.isPagingEnabled = true
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
         
+//        let layout = UICollectionViewFlowLayout()
+//        layout.scrollDirection = .horizontal
+//        layout.sectionInsetReference = .fromSafeArea
+//        collectionView.setCollectionViewLayout(layout, animated: true)
         
+        
+//        if let flowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+//            if #available(iOS 11.0, *) {
+//                flowLayout.sectionInsetReference = .fromSafeArea
+//            }
+//        }
 //        collectionView.contentInsetAdjustmentBehavior = .always
 //        collectionView.insetsLayoutMarginsFromSafeArea = true
         
@@ -36,13 +46,27 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
 
         // Register cell classes
         self.collectionView!.register(ArticleCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
+        
     }
     
     
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        collectionView.collectionViewLayout.invalidateLayout()
-//    }
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        
+        guard let collectionView = collectionView else { return }
+        let offset = collectionView.contentOffset
+        let width = collectionView.bounds.size.width
+
+        let index = round(offset.x / width)
+        let newOffset = CGPoint(x: index * size.width, y: offset.y)
+
+        coordinator.animate(alongsideTransition: { (context) in
+            collectionView.reloadData()
+            collectionView.setContentOffset(newOffset, animated: false)
+            
+        }, completion: nil)
+        
+        super.viewWillTransition(to: size, with: coordinator)
+    }
     
     /*
     // MARK: - Navigation
@@ -73,10 +97,11 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
         }
     
         let article = articles[indexPath.row]
+        cell.configure(article)
         
-        cell.articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
-        cell.articleNameLabel.text = article.title
-        cell.articleDescriptionTextView.text = article.description
+        cell.onOpenWebviewClicked = {
+            self.openInBrowser(articleUrl: article.url)
+        }
         
         return cell
     }
@@ -84,12 +109,16 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
     
     // MARK: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: view.safeAreaLayoutGuide.layoutFrame.height)
-        
+        return CGSize(width: view.frame.width, height: view.safeAreaLayoutGuide.layoutFrame.height )
+        //bounds.size.height
         //width: view.frame.width, height: view.frame.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom
         
         //width: view.safeAreaLayoutGuide.layoutFrame.width, height: view.safeAreaLayoutGuide.layoutFrame.height
     }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 40)
+//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
@@ -125,5 +154,22 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
     
     }
     */
+//    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        for cell in collectionView.visibleCells {
+//            let indexPath = collectionView.indexPath(for: cell)
+//            //print(indexPath)
+//            if let row = indexPath?.row {
+//                article = articles[row]
+//            }
+//
+//        }
+//    }
+    
+    //MARK: Private Methods
+    private func openInBrowser(articleUrl: String){
+        let webViewController = WebViewController()
+        webViewController.setWebViewURL(articleUrl)
+        navigationController?.pushViewController(webViewController, animated: true)
+    }
 
 }
