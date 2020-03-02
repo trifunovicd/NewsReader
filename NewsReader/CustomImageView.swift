@@ -27,6 +27,7 @@ class CustomImageView : UIImageView {
         }
         
         URLSession.shared.dataTask(with: url!, completionHandler: {data,_,error in
+            
             if error != nil {
                 print(error!)
                 return
@@ -41,6 +42,7 @@ class CustomImageView : UIImageView {
                 
                 imageCache.setObject(imageToCache!, forKey: urlString as NSString)
             }
-            }).resume()
+            
+        }).resume()
     }
 }

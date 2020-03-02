@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Alamofire
 
 enum ArticleError: Error {
     case noDataAvailable
@@ -24,8 +25,8 @@ struct ArticleRequest {
     }
     
     func getArticles (completion: @escaping(Result<[ArticleDetails], ArticleError>) -> Void){
-        let dataTask = URLSession.shared.dataTask(with: resourceURL){data,_,_ in
-            guard let jsonData = data else {
+        AF.request(resourceURL).validate().responseJSON { response in
+            guard let jsonData = response.data else {
                 completion(.failure(.noDataAvailable))
                 return
             }
@@ -40,7 +41,5 @@ struct ArticleRequest {
                 completion(.failure(.canNotProcessData))
             }
         }
-        
-        dataTask.resume()
     }
 }
