@@ -8,21 +8,20 @@
 
 import UIKit
 import os.log
+import RxSwift
+import RxCocoa
 
 private let cellIdentifier = "ArticleTableViewCell"
 
 class ArticlesTableViewController: UITableViewController {
     
     //MARK: Properties
-    private var articles = [ArticleDetails]() {
-        didSet {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-    }
+    
+    private var articles: BehaviorRelay<[ArticleDetails]> = BehaviorRelay<[ArticleDetails]>(value: [])
     
     private let myRefreshControl = UIRefreshControl()
+    
+    private let bag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +34,21 @@ class ArticlesTableViewController: UITableViewController {
         tableView.rowHeight = 90
         
         loadNews()
+        
+        articles.asObservable().subscribe(onNext: { [weak self] value in
+            self?.tableView.reloadData()
+        })
+        .disposed(by: bag)
+        
+//        articles.bind(to: tableView.rx.items(cellIdentifier: cellIdentifier, cellType: ArticleTableViewCell.self)){
+//            row, article, cell in
+//
+//            let article = self.articles.value[row]
+//
+//            cell.articleNameLabel.text = article.title
+//            cell.articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
+//        }.disposed(by: bag)
+        
     }
 
     
@@ -44,31 +58,31 @@ class ArticlesTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articles.count
+        return articles.value.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? ArticleTableViewCell else{
             fatalError("The dequeued cell is not an instance of ArticleTableViewCell.")
         }
-        
-        let article = articles[indexPath.row]
-        
+
+        let article = articles.value[indexPath.row]
+
         cell.articleNameLabel.text = article.title
         cell.articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
 
         return cell
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
-        
-        articleCollectionViewController.articles = articles
+
+        articleCollectionViewController.articles = articles.value
         articleCollectionViewController.indexPath = indexPath
-        
+
         navigationController?.pushViewController(articleCollectionViewController, animated: true)
     }
     
@@ -88,22 +102,29 @@ class ArticlesTableViewController: UITableViewController {
             tableView.addSubview(myRefreshControl)
         }
         
-        myRefreshControl.addTarget(self, action: #selector(loadNews), for: .valueChanged)
         myRefreshControl.tintColor = .gray
         myRefreshControl.attributedTitle = NSAttributedString(string: "Fetching Data ...", attributes: [NSAttributedString.Key.foregroundColor:UIColor.gray])
+        
+    myRefreshControl.rx.controlEvent(.valueChanged).asObservable().subscribe(onNext: { [weak self] in
+            self?.loadNews()
+        
+        }).disposed(by: bag)
     }
     
     @objc private func loadNews() {
         let articleRequest = ArticleRequest()
-        articleRequest.getArticles { [weak self] result in
-            switch result {
-            case .failure(let error):
-                print(error)
-                self?.myRefreshControl.endRefreshing()
-            case .success(let articles):
-                self?.articles = articles
-                self?.myRefreshControl.endRefreshing()
-            }
-        }
+        
+        let observable = articleRequest.getArticles()
+        
+        observable.subscribe(onNext: { [weak self] articles in
+            self?.articles.accept(articles)
+            self?.myRefreshControl.endRefreshing()
+            
+        }, onError: { [weak self] error in
+            print(error)
+            self?.myRefreshControl.endRefreshing()
+            
+        }).disposed(by: bag)
+        
     }
 }

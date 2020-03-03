@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 private let reuseIdentifier = "ArticleCollectionViewCell"
 
@@ -15,7 +17,6 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
     //MARK: Properties
     var articles = [ArticleDetails]()
     var indexPath: IndexPath!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

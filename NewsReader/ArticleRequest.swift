@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import RxSwift
 
 enum ArticleError: Error {
     case noDataAvailable
@@ -24,21 +25,30 @@ struct ArticleRequest {
         self.resourceURL = resourceURL
     }
     
-    func getArticles (completion: @escaping(Result<[ArticleDetails], ArticleError>) -> Void){
-        AF.request(resourceURL).validate().responseJSON { response in
-            guard let jsonData = response.data else {
-                completion(.failure(.noDataAvailable))
-                return
+    func getArticles () -> Observable<[ArticleDetails]> {
+        
+        return Observable.create { observer in
+            
+            let request = AF.request(self.resourceURL).validate().responseJSON { response in
+                guard let jsonData = response.data else {
+                    observer.onError(ArticleError.noDataAvailable)
+                    return
+                }
+                
+                do{
+                    let decoder = JSONDecoder()
+                    let articlesResponse = try decoder.decode(Articles.self, from: jsonData)
+                    let articleDetails = articlesResponse.articles
+                    observer.onNext(articleDetails)
+                    observer.onCompleted()
+                }
+                catch{
+                    observer.onError(ArticleError.canNotProcessData)
+                }
             }
             
-            do{
-                let decoder = JSONDecoder()
-                let articlesResponse = try decoder.decode(Articles.self, from: jsonData)
-                let articleDetails = articlesResponse.articles
-                completion(.success(articleDetails))
-            }
-            catch{
-                completion(.failure(.canNotProcessData))
+            return Disposables.create{
+                request.cancel()
             }
         }
     }

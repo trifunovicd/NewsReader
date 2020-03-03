@@ -6,6 +6,8 @@ target 'NewsReader' do
   use_frameworks!
 
   # Pods for NewsReader
+  pod 'RxSwift', '~> 5'
+  pod 'RxCocoa', '~> 5'
   pod 'Alamofire', '~> 5.0'
 
   target 'NewsReaderTests' do
