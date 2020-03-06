@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,7 +11,7 @@
 		1F375ACBA57B998E4087A6DD /* Pods_NewsReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46A71A76EE8283775C7F8ACF /* Pods_NewsReader.framework */; };
 		B961792F240CE70B00E534E1 /* ArticleCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B961792E240CE70B00E534E1 /* ArticleCollectionViewController.swift */; };
 		B96C2FA4240514B20039C10B /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA3240514B20039C10B /* News.swift */; };
-		B96C2FA6240515D50039C10B /* ArticleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA5240515D50039C10B /* ArticleRequest.swift */; };
+		B96C2FA6240515D50039C10B /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA5240515D50039C10B /* Request.swift */; };
 		B96C2FA8240526D70039C10B /* ArticlesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA7240526D70039C10B /* ArticlesTableViewController.swift */; };
 		B96C2FAA240528DE0039C10B /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA9240528DE0039C10B /* ArticleTableViewCell.swift */; };
 		B96C2FAC240548610039C10B /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FAB240548610039C10B /* CustomImageView.swift */; };
@@ -54,7 +54,7 @@
 		78EAA1249EB2FD397FCA08D1 /* Pods-NewsReader-NewsReaderUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsReader-NewsReaderUITests.debug.xcconfig"; path = "Target Support Files/Pods-NewsReader-NewsReaderUITests/Pods-NewsReader-NewsReaderUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		B961792E240CE70B00E534E1 /* ArticleCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewController.swift; sourceTree = "<group>"; };
 		B96C2FA3240514B20039C10B /* News.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
-		B96C2FA5240515D50039C10B /* ArticleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleRequest.swift; sourceTree = "<group>"; };
+		B96C2FA5240515D50039C10B /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		B96C2FA7240526D70039C10B /* ArticlesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesTableViewController.swift; sourceTree = "<group>"; };
 		B96C2FA9240528DE0039C10B /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
 		B96C2FAB240548610039C10B /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
@@ -125,7 +125,6 @@
 				E64AF0614739C918D7BE7504 /* Pods-NewsReaderTests.debug.xcconfig */,
 				3E83DDB798312F0255E3312C /* Pods-NewsReaderTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -157,7 +156,7 @@
 				B9835CF12405064A00EE6F32 /* AppDelegate.swift */,
 				B9835CF32405064A00EE6F32 /* SceneDelegate.swift */,
 				B96C2FA3240514B20039C10B /* News.swift */,
-				B96C2FA5240515D50039C10B /* ArticleRequest.swift */,
+				B96C2FA5240515D50039C10B /* Request.swift */,
 				B96C2FAB240548610039C10B /* CustomImageView.swift */,
 				B9FFE4E52407E9D8009FA7AD /* WebViewController.swift */,
 				B96C2FA9240528DE0039C10B /* ArticleTableViewCell.swift */,
@@ -438,7 +437,7 @@
 				B9835CF42405064A00EE6F32 /* SceneDelegate.swift in Sources */,
 				B96C2FAC240548610039C10B /* CustomImageView.swift in Sources */,
 				B96C2FAA240528DE0039C10B /* ArticleTableViewCell.swift in Sources */,
-				B96C2FA6240515D50039C10B /* ArticleRequest.swift in Sources */,
+				B96C2FA6240515D50039C10B /* Request.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

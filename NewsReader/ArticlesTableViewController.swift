@@ -23,6 +23,9 @@ class ArticlesTableViewController: UITableViewController {
     
     private let bag = DisposeBag()
     
+    private let reloadRequest = PublishSubject<Void>()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -33,21 +36,13 @@ class ArticlesTableViewController: UITableViewController {
         tableView.register(ArticleTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.rowHeight = 90
         
-        loadNews()
+        bindFetch()
+        reload()
         
         articles.asObservable().subscribe(onNext: { [weak self] value in
             self?.tableView.reloadData()
         })
         .disposed(by: bag)
-        
-//        articles.bind(to: tableView.rx.items(cellIdentifier: cellIdentifier, cellType: ArticleTableViewCell.self)){
-//            row, article, cell in
-//
-//            let article = self.articles.value[row]
-//
-//            cell.articleNameLabel.text = article.title
-//            cell.articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
-//        }.disposed(by: bag)
         
     }
 
@@ -106,25 +101,33 @@ class ArticlesTableViewController: UITableViewController {
         myRefreshControl.attributedTitle = NSAttributedString(string: "Fetching Data ...", attributes: [NSAttributedString.Key.foregroundColor:UIColor.gray])
         
     myRefreshControl.rx.controlEvent(.valueChanged).asObservable().subscribe(onNext: { [weak self] in
-            self?.loadNews()
+            self?.reload()
         
         }).disposed(by: bag)
     }
     
-    @objc private func loadNews() {
-        let articleRequest = ArticleRequest()
-        
-        let observable = articleRequest.getArticles()
-        
-        observable.subscribe(onNext: { [weak self] articles in
-            self?.articles.accept(articles)
-            self?.myRefreshControl.endRefreshing()
-            
-        }, onError: { [weak self] error in
-            print(error)
-            self?.myRefreshControl.endRefreshing()
-            
-        }).disposed(by: bag)
-        
+    private func reload() {
+        reloadRequest.onNext(())
+    }
+     
+    private func bindFetch() {
+        reloadRequest
+            .asObservable()
+            .flatMap(getArticlesObservable)
+            .subscribe(onNext: { [weak self] allArticles in
+                self?.articles.accept(allArticles.articles)
+                self?.myRefreshControl.endRefreshing()
+
+            }, onError: { [weak self] error in
+                print(error)
+                self?.myRefreshControl.endRefreshing()
+
+            }).disposed(by: bag)
+    }
+    
+    private func getArticlesObservable() -> Observable<Articles>{
+        let request = Request()
+        return request.get(url: Urls.articleUrl.rawValue)
+
     }
 }

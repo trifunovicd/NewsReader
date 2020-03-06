@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct Articles: Decodable {
+struct Articles: Codable {
     var articles: [ArticleDetails]
 }
 
-struct ArticleDetails: Decodable {
+struct ArticleDetails: Codable {
     var title: String
     var description: String
     var url: String
