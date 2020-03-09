@@ -25,7 +25,6 @@ class ArticlesTableViewController: UITableViewController {
     
     private let reloadRequest = PublishSubject<Void>()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -37,12 +36,13 @@ class ArticlesTableViewController: UITableViewController {
         tableView.rowHeight = 90
         
         bindFetch()
-        reload()
         
         articles.asObservable().subscribe(onNext: { [weak self] value in
             self?.tableView.reloadData()
         })
         .disposed(by: bag)
+        
+        loadNews()
         
     }
 
@@ -108,26 +108,78 @@ class ArticlesTableViewController: UITableViewController {
     
     private func reload() {
         reloadRequest.onNext(())
+        setDate()
     }
      
     private func bindFetch() {
         reloadRequest
             .asObservable()
             .flatMap(getArticlesObservable)
-            .subscribe(onNext: { [weak self] allArticles in
-                self?.articles.accept(allArticles.articles)
-                self?.myRefreshControl.endRefreshing()
+            .subscribe(onNext: { [weak self] result in
+                switch result {
+                case .success(let allArticles):
+                    self?.myRefreshControl.endRefreshing()
+                    self?.articles.accept(allArticles.articles)
+                    
+                case .failure(let error):
+                    print(error)
+                    self?.myRefreshControl.endRefreshing()
 
-            }, onError: { [weak self] error in
-                print(error)
-                self?.myRefreshControl.endRefreshing()
-
+                    let alert = self?.getErrorAlert()
+                    self?.present(alert!, animated: true, completion: nil)
+                }
             }).disposed(by: bag)
+        
     }
     
-    private func getArticlesObservable() -> Observable<Articles>{
+    private func getArticlesObservable() -> Observable<Result<Articles, Error>>{
         let request = Request()
-        return request.get(url: Urls.articleUrl.rawValue)
-
+        let observable: Observable<Articles> = request.get(url: Urls.articleUrl.rawValue)
+        
+        return observable.map { (articles) -> Result<Articles,Error> in
+            return Result.success(articles)
+        }.catchError { (error) -> Observable<Result<Articles, Error>> in
+            let result = Result<Articles,Error>.failure(error)
+            return Observable.just(result)
+        }
+        
+    }
+    
+    private func getErrorAlert() -> UIAlertController{
+        let alert = UIAlertController(title: "Greška", message: "Ups, došlo je do pogreške.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "U redu", style: .default, handler: nil))
+        
+        return alert
+    }
+    
+    private func setDate() {
+        let defaults = UserDefaults.standard
+        defaults.set(Date(), forKey: "Date")
+    }
+    
+    private func getDate() -> Date?{
+        let defaults = UserDefaults.standard
+        let date = defaults.value(forKey: "Date") as? Date
+        return date
+    }
+    
+    private func loadNews() {
+        if let oldDate = getDate() {
+            let todayDate = Date()
+            let difference = (todayDate.timeIntervalSince1970 * 1000) - (oldDate.timeIntervalSince1970 * 1000)
+            let seconds = difference / 1000;
+            let minutes = seconds / 60;
+            
+            if minutes > 5 {
+                print("More than 5 min...")
+                reload()
+            }
+            else {
+                //local fetch
+            }
+        }
+        else {
+            reload()
+        }
     }
 }
