@@ -108,7 +108,6 @@ class ArticlesTableViewController: UITableViewController {
     
     private func reload() {
         reloadRequest.onNext(())
-        setDate()
     }
      
     private func bindFetch() {
@@ -120,6 +119,7 @@ class ArticlesTableViewController: UITableViewController {
                 case .success(let allArticles):
                     self?.myRefreshControl.endRefreshing()
                     self?.articles.accept(allArticles.articles)
+                    self?.setDate()
                     
                 case .failure(let error):
                     print(error)
