@@ -16,14 +16,11 @@ private let cellIdentifier = "ArticleTableViewCell"
 class ArticlesTableViewController: UITableViewController {
     
     //MARK: Properties
-    
-    private var articles: BehaviorRelay<[ArticleDetails]> = BehaviorRelay<[ArticleDetails]>(value: [])
+    private let articleViewModel = ArticleViewModel()
     
     private let myRefreshControl = UIRefreshControl()
     
     private let bag = DisposeBag()
-    
-    private let reloadRequest = PublishSubject<Void>()
     
     private var pullToRefresh: Bool = false
     
@@ -37,12 +34,9 @@ class ArticlesTableViewController: UITableViewController {
         tableView.register(ArticleTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.rowHeight = 90
         
-        bindFetch()
+        articleViewModel.bindFetch()
         
-        articles.asObservable().subscribe(onNext: { [weak self] value in
-            self?.tableView.reloadData()
-        })
-        .disposed(by: bag)
+        setObservers()
         
         reload()
         
@@ -55,7 +49,7 @@ class ArticlesTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articles.value.count
+        return articleViewModel.getArticles().value.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -63,7 +57,7 @@ class ArticlesTableViewController: UITableViewController {
             fatalError("The dequeued cell is not an instance of ArticleTableViewCell.")
         }
 
-        let article = articles.value[indexPath.row]
+        let article = articleViewModel.getArticles().value[indexPath.row]
 
         cell.articleNameLabel.text = article.title
         cell.articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
@@ -77,7 +71,7 @@ class ArticlesTableViewController: UITableViewController {
         layout.scrollDirection = .horizontal
         let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
 
-        articleCollectionViewController.articles = articles.value
+        articleCollectionViewController.articles = articleViewModel.getArticles().value
         articleCollectionViewController.indexPath = indexPath
 
         navigationController?.pushViewController(articleCollectionViewController, animated: true)
@@ -110,50 +104,24 @@ class ArticlesTableViewController: UITableViewController {
     }
     
     private func reload() {
-        reloadRequest.onNext(())
+        articleViewModel.setPullToRefresh(pullToRefresh)
+        articleViewModel.getReloadRequest().onNext(())
         pullToRefresh = false
     }
      
-    private func bindFetch() {
-        reloadRequest
-            .asObservable()
-            .flatMap(getArticlesObservable)
-            .subscribe(onNext: { [weak self] result in
-                switch result {
-                case .success(let allArticles):
-                    self?.myRefreshControl.endRefreshing()
-                    self?.articles.accept(allArticles.articles)
-                    self?.setDate()
-                    
-                case .failure(let error):
-                    print(error)
-                    self?.myRefreshControl.endRefreshing()
-
-                    let alert = self?.getErrorAlert()
-                    self?.present(alert!, animated: true, completion: nil)
-                }
+    private func setObservers() {
+        articleViewModel.getRefreshTable().subscribe(onNext: { [weak self] in
+            self?.tableView.reloadData()
+        }).disposed(by: bag)
+        
+        articleViewModel.getEndRefreshing().subscribe(onNext: { [weak self] in
+            self?.myRefreshControl.endRefreshing()
+        }).disposed(by: bag)
+        
+        articleViewModel.getAlertOfError().subscribe(onNext: { [weak self] in
+            let alert = self?.getErrorAlert()
+            self?.present(alert!, animated: true, completion: nil)
             }).disposed(by: bag)
-        
-    }
-    
-    private func getArticlesObservable() -> Observable<Result<Articles, Error>>{
-        let observable: Observable<Articles>
-        
-        if shouldFetchFromInternet(pullToRefresh) {
-            let request = Request()
-            observable = request.get(url: Urls.articleUrl.rawValue)
-        }
-        else {
-            //local
-            observable = Observable.empty()
-        }
-        
-        return observable.map { (articles) -> Result<Articles,Error> in
-            return Result.success(articles)
-        }.catchError { (error) -> Observable<Result<Articles, Error>> in
-            let result = Result<Articles,Error>.failure(error)
-            return Observable.just(result)
-        }
     }
     
     private func getErrorAlert() -> UIAlertController{
@@ -163,35 +131,4 @@ class ArticlesTableViewController: UITableViewController {
         return alert
     }
     
-    private func setDate() {
-        let defaults = UserDefaults.standard
-        defaults.set(Date(), forKey: "Date")
-    }
-    
-    private func getDate() -> Date?{
-        let defaults = UserDefaults.standard
-        let date = defaults.value(forKey: "Date") as? Date
-        return date
-    }
-    
-    private func shouldFetchFromInternet(_ pullToRefresh: Bool) -> Bool{
-        var onlineFetch = false
-        
-        if let oldDate = getDate() {
-            let todayDate = Date()
-            let difference = (todayDate.timeIntervalSince1970 * 1000) - (oldDate.timeIntervalSince1970 * 1000)
-            let seconds = difference / 1000;
-            let minutes = seconds / 60;
-            
-            if minutes > 5 || pullToRefresh {
-                print("Online fetching...")
-                onlineFetch = true
-            }
-        }
-        else {
-            onlineFetch = true
-        }
-        
-        return onlineFetch
-    }
 }
