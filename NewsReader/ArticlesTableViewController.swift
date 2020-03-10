@@ -25,6 +25,8 @@ class ArticlesTableViewController: UITableViewController {
     
     private let reloadRequest = PublishSubject<Void>()
     
+    private var pullToRefresh: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,7 +44,7 @@ class ArticlesTableViewController: UITableViewController {
         })
         .disposed(by: bag)
         
-        loadNews()
+        reload()
         
     }
 
@@ -101,6 +103,7 @@ class ArticlesTableViewController: UITableViewController {
         myRefreshControl.attributedTitle = NSAttributedString(string: "Fetching Data ...", attributes: [NSAttributedString.Key.foregroundColor:UIColor.gray])
         
     myRefreshControl.rx.controlEvent(.valueChanged).asObservable().subscribe(onNext: { [weak self] in
+            self?.pullToRefresh = true
             self?.reload()
         
         }).disposed(by: bag)
@@ -108,6 +111,7 @@ class ArticlesTableViewController: UITableViewController {
     
     private func reload() {
         reloadRequest.onNext(())
+        pullToRefresh = false
     }
      
     private func bindFetch() {
@@ -133,8 +137,16 @@ class ArticlesTableViewController: UITableViewController {
     }
     
     private func getArticlesObservable() -> Observable<Result<Articles, Error>>{
-        let request = Request()
-        let observable: Observable<Articles> = request.get(url: Urls.articleUrl.rawValue)
+        let observable: Observable<Articles>
+        
+        if shouldFetchFromInternet(pullToRefresh) {
+            let request = Request()
+            observable = request.get(url: Urls.articleUrl.rawValue)
+        }
+        else {
+            //local
+            observable = Observable.empty()
+        }
         
         return observable.map { (articles) -> Result<Articles,Error> in
             return Result.success(articles)
@@ -142,7 +154,6 @@ class ArticlesTableViewController: UITableViewController {
             let result = Result<Articles,Error>.failure(error)
             return Observable.just(result)
         }
-        
     }
     
     private func getErrorAlert() -> UIAlertController{
@@ -163,23 +174,24 @@ class ArticlesTableViewController: UITableViewController {
         return date
     }
     
-    private func loadNews() {
+    private func shouldFetchFromInternet(_ pullToRefresh: Bool) -> Bool{
+        var onlineFetch = false
+        
         if let oldDate = getDate() {
             let todayDate = Date()
             let difference = (todayDate.timeIntervalSince1970 * 1000) - (oldDate.timeIntervalSince1970 * 1000)
             let seconds = difference / 1000;
             let minutes = seconds / 60;
             
-            if minutes > 5 {
-                print("More than 5 min...")
-                reload()
-            }
-            else {
-                //local fetch
+            if minutes > 5 || pullToRefresh {
+                print("Online fetching...")
+                onlineFetch = true
             }
         }
         else {
-            reload()
+            onlineFetch = true
         }
+        
+        return onlineFetch
     }
 }
