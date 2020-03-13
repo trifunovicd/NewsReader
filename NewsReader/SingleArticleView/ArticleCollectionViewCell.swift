@@ -17,7 +17,7 @@ class ArticleCollectionViewCell: UICollectionViewCell {
         return image
     }()
     
-    private  let articleNameLabel: UILabel = {
+    private let articleNameLabel: UILabel = {
         let label = UILabel()
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
@@ -26,7 +26,7 @@ class ArticleCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private  let articleDescriptionTextView: UITextView = {
+    private let articleDescriptionTextView: UITextView = {
         let text = UITextView()
         text.isEditable = false
         text.isScrollEnabled = false

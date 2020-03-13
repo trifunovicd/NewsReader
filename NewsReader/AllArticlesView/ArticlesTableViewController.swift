@@ -16,13 +16,11 @@ private let cellIdentifier = "ArticleTableViewCell"
 class ArticlesTableViewController: UITableViewController {
     
     //MARK: Properties
-    private let articleViewModel = ArticleViewModel()
+    private let articleViewModel = AllArticlesViewModel()
     
     private let myRefreshControl = UIRefreshControl()
     
     private let bag = DisposeBag()
-    
-    private var pullToRefresh: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,11 +32,11 @@ class ArticlesTableViewController: UITableViewController {
         tableView.register(ArticleTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.rowHeight = 90
         
-        articleViewModel.bindFetch()
+        articleViewModel.bindFetch().disposed(by: bag)
         
         setObservers()
         
-        reload()
+        reload(forceUpdate: RefreshType.general)
         
     }
 
@@ -49,7 +47,7 @@ class ArticlesTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articleViewModel.getArticles().value.count
+        return articleViewModel.articles.value.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -57,11 +55,10 @@ class ArticlesTableViewController: UITableViewController {
             fatalError("The dequeued cell is not an instance of ArticleTableViewCell.")
         }
 
-        let article = articleViewModel.getArticles().value[indexPath.row]
+        let article = articleViewModel.articles.value[indexPath.row]
 
-        cell.articleNameLabel.text = article.title
-        cell.articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
-
+        cell.configure(article)
+        
         return cell
     }
 
@@ -70,9 +67,10 @@ class ArticlesTableViewController: UITableViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
-
-        articleCollectionViewController.articles = articleViewModel.getArticles().value
-        articleCollectionViewController.indexPath = indexPath
+        
+        let singleArticleViewModel = SingleArticleViewModel(articles:articleViewModel.articles.value, index: indexPath.row)
+        
+        articleCollectionViewController.singleArticleViewModel = singleArticleViewModel
 
         navigationController?.pushViewController(articleCollectionViewController, animated: true)
     }
@@ -97,28 +95,25 @@ class ArticlesTableViewController: UITableViewController {
         myRefreshControl.attributedTitle = NSAttributedString(string: "Fetching Data ...", attributes: [NSAttributedString.Key.foregroundColor:UIColor.gray])
         
     myRefreshControl.rx.controlEvent(.valueChanged).asObservable().subscribe(onNext: { [weak self] in
-            self?.pullToRefresh = true
-            self?.reload()
+        self?.reload(forceUpdate: RefreshType.network)
         
         }).disposed(by: bag)
     }
     
-    private func reload() {
-        articleViewModel.setPullToRefresh(pullToRefresh)
-        articleViewModel.getReloadRequest().onNext(())
-        pullToRefresh = false
+    private func reload(forceUpdate: RefreshType) {
+        articleViewModel.reloadRequest.onNext(forceUpdate)
     }
      
     private func setObservers() {
-        articleViewModel.getRefreshTable().subscribe(onNext: { [weak self] in
+        articleViewModel.refreshTable.subscribe(onNext: { [weak self] in
             self?.tableView.reloadData()
         }).disposed(by: bag)
         
-        articleViewModel.getEndRefreshing().subscribe(onNext: { [weak self] in
+        articleViewModel.endRefreshing.subscribe(onNext: { [weak self] in
             self?.myRefreshControl.endRefreshing()
         }).disposed(by: bag)
         
-        articleViewModel.getAlertOfError().subscribe(onNext: { [weak self] in
+        articleViewModel.alertOfError.subscribe(onNext: { [weak self] in
             let alert = self?.getErrorAlert()
             self?.present(alert!, animated: true, completion: nil)
             }).disposed(by: bag)

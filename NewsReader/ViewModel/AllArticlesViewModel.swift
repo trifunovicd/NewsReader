@@ -1,5 +1,5 @@
 //
-//  ArticleViewModel.swift
+//  AllArticlesViewModel.swift
 //  NewsReader
 //
 //  Created by Internship on 10/03/2020.
@@ -10,54 +10,28 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class ArticleViewModel {
+enum RefreshType {
+    case network
+    case general
+}
+
+class AllArticlesViewModel {
     
     //MARK: Properties
-    private var articles: BehaviorRelay<[ArticleDetails]> = BehaviorRelay<[ArticleDetails]>(value: [])
+    var articles: BehaviorRelay<[ArticleDetails]> = BehaviorRelay<[ArticleDetails]>(value: [])
     
-    private let bag = DisposeBag()
+    let reloadRequest = PublishSubject<RefreshType>()
     
-    private let reloadRequest = PublishSubject<Void>()
+    let endRefreshing = PublishSubject<Void>()
     
-    private let endRefreshing = PublishSubject<Void>()
+    let refreshTable = PublishSubject<Void>()
     
-    private let refreshTable = PublishSubject<Void>()
+    let alertOfError = PublishSubject<Void>()
     
-    private let alertOfError = PublishSubject<Void>()
-    
-    private var pullToRefresh: Bool = false
-    
-    
-    //MARK: Get properties
-    func getArticles() -> BehaviorRelay<[ArticleDetails]>{
-        return articles
-    }
-    
-    func getReloadRequest() -> PublishSubject<Void>{
-        return reloadRequest
-    }
-    
-    func getEndRefreshing() -> PublishSubject<Void>{
-        return endRefreshing
-    }
-    
-    func getRefreshTable() -> PublishSubject<Void>{
-        return refreshTable
-    }
-    
-    func getAlertOfError() -> PublishSubject<Void>{
-        return alertOfError
-    }
-    
-    
-    //MARK: Set properties
-    func setPullToRefresh(_ pullToRefresh: Bool) {
-        self.pullToRefresh = pullToRefresh
-    }
-    
+   
     
     //MARK: Private Methods
-    func bindFetch() {
+    func bindFetch() -> Disposable{
         reloadRequest
             .asObservable()
             .flatMap(getArticlesObservable)
@@ -75,14 +49,14 @@ class ArticleViewModel {
                     self?.alertOfError.onNext(())
                     
                 }
-            }).disposed(by: bag)
-        
+            })
     }
     
-    private func getArticlesObservable() -> Observable<Result<Articles, Error>>{
+    private func getArticlesObservable(forceUpdate: RefreshType) -> Observable<Result<Articles, Error>>{
         let observable: Observable<Articles>
         
-        if shouldFetchFromInternet(pullToRefresh) {
+        
+        if shouldFetchFromInternet(forceUpdate) {
             observable = getRequest(url: Urls.articleUrl.rawValue)
         }
         else {
@@ -109,7 +83,7 @@ class ArticleViewModel {
         return date
     }
     
-    private func shouldFetchFromInternet(_ pullToRefresh: Bool) -> Bool{
+    private func shouldFetchFromInternet(_ forceUpdate: RefreshType) -> Bool{
         var onlineFetch = false
         
         if let oldDate = getDate() {
@@ -118,7 +92,7 @@ class ArticleViewModel {
             let seconds = difference / 1000;
             let minutes = seconds / 60;
             
-            if minutes > 5 || pullToRefresh {
+            if minutes > 5 || forceUpdate == RefreshType.network {
                 print("Online fetching...")
                 onlineFetch = true
             }

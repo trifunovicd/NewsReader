@@ -11,7 +11,7 @@ import UIKit
 class ArticleTableViewCell: UITableViewCell {
     
     //MARK: Properties
-    let articleNameLabel: UILabel = {
+    private let articleNameLabel: UILabel = {
         let label = UILabel()
         label.text = "label"
         label.lineBreakMode = .byWordWrapping
@@ -20,11 +20,16 @@ class ArticleTableViewCell: UITableViewCell {
         return label
     }()
     
-    let articleImageView: CustomImageView = {
+    private let articleImageView: CustomImageView = {
         let image = CustomImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
+    
+    func configure(_ article: ArticleDetails) {
+        articleNameLabel.text = article.title
+        articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
