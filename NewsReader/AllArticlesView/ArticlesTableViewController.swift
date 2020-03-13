@@ -39,7 +39,12 @@ class ArticlesTableViewController: UITableViewController {
         reload(forceUpdate: RefreshType.general)
         
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tabBarController?.navigationItem.title = "Factory"
+    }
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -78,9 +83,9 @@ class ArticlesTableViewController: UITableViewController {
     
     //MARK: Private Methods
     private func setupNavigationBar(){
-        navigationItem.title = "Factory"
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.barTintColor = UIColor(red: 28.0/255.0, green: 68.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+        tabBarController?.navigationItem.title = "Factory"
+        tabBarController?.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        tabBarController?.navigationController?.navigationBar.barTintColor = UIColor(red: 28.0/255.0, green: 68.0/255.0, blue: 156.0/255.0, alpha: 1.0)
     }
     
     private func setupRefreshControl(){

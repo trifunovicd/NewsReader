@@ -22,7 +22,7 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         navigationController?.navigationBar.tintColor = UIColor.white
         collectionView?.backgroundColor = .white
         collectionView.isPagingEnabled = true
