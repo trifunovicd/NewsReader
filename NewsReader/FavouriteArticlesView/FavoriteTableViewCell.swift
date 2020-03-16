@@ -1,15 +1,15 @@
 //
-//  ArticleTableViewCell.swift
+//  FavoriteTableViewCell.swift
 //  NewsReader
 //
-//  Created by Internship on 25/02/2020.
+//  Created by Internship on 16/03/2020.
 //  Copyright © 2020 Internship. All rights reserved.
 //
 
 import UIKit
 
-class ArticleTableViewCell: UITableViewCell {
-    
+class FavoriteTableViewCell: UITableViewCell {
+
     //MARK: Properties
     private let articleNameLabel: UILabel = {
         let label = UILabel()
@@ -101,5 +101,5 @@ class ArticleTableViewCell: UITableViewCell {
         setupFavoriteControl()
         onFavoriteClicked!()
     }
-    
+
 }

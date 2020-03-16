@@ -7,14 +7,20 @@
 //
 
 import Foundation
+import RealmSwift
 
-struct Articles: Codable {
+class Articles: Object, Codable {
     var articles: [ArticleDetails]
 }
 
-struct ArticleDetails: Codable {
-    var title: String
-    var description: String
-    var url: String
-    var urlToImage: String
+class ArticleDetails: Object, Codable {
+    @objc dynamic var title: String
+    @objc dynamic var article_description: String
+    @objc dynamic var url: String
+    @objc dynamic var urlToImage: String
+    @objc dynamic var dateSaved: Date?
+    
+    private enum CodingKeys: String, CodingKey {
+        case title, article_description = "description", url, urlToImage
+    }
 }

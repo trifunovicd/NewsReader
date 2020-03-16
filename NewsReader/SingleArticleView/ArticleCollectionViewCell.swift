@@ -71,7 +71,7 @@ class ArticleCollectionViewCell: UICollectionViewCell {
     func configure(_ article: ArticleDetails){
         articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
         articleNameLabel.text = article.title
-        articleDescriptionTextView.text = article.description
+        articleDescriptionTextView.text = article.article_description
         openInBrowserButton.addTarget(self, action: #selector(openInBrowser), for: .touchUpInside)
     }
     

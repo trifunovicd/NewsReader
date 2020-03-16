@@ -10,6 +10,7 @@ import UIKit
 import os.log
 import RxSwift
 import RxCocoa
+import RealmSwift
 
 private let cellIdentifier = "ArticleTableViewCell"
 
@@ -38,6 +39,8 @@ class ArticlesTableViewController: UITableViewController {
         
         reload(forceUpdate: RefreshType.general)
         
+        articleViewModel.setSaveOption().disposed(by: bag)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,27 +67,34 @@ class ArticlesTableViewController: UITableViewController {
 
         cell.configure(article)
         
+        cell.onFavoriteClicked = { [weak self] in
+            print("clicked")
+            article.isSelected = !article.isSelected
+            self?.articleViewModel.saveToFavorites.onNext(article)
+            //self?.saveArticleToFavorites(article: article)
+        }
+        
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
-        
-        let singleArticleViewModel = SingleArticleViewModel(articles:articleViewModel.articles.value, index: indexPath.row)
-        
-        articleCollectionViewController.singleArticleViewModel = singleArticleViewModel
-
-        navigationController?.pushViewController(articleCollectionViewController, animated: true)
+//        let layout = UICollectionViewFlowLayout()
+//        layout.scrollDirection = .horizontal
+//        let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
+//
+//        let singleArticleViewModel = SingleArticleViewModel(articles:articleViewModel.articles.value, index: indexPath.row)
+//
+//        articleCollectionViewController.singleArticleViewModel = singleArticleViewModel
+//
+//        navigationController?.pushViewController(articleCollectionViewController, animated: true)
     }
     
     
     //MARK: Private Methods
     private func setupNavigationBar(){
         tabBarController?.navigationItem.title = "Factory"
-        tabBarController?.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        //tabBarController?.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         tabBarController?.navigationController?.navigationBar.barTintColor = UIColor(red: 28.0/255.0, green: 68.0/255.0, blue: 156.0/255.0, alpha: 1.0)
     }
     
@@ -129,6 +139,28 @@ class ArticlesTableViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "U redu", style: .default, handler: nil))
         
         return alert
+    }
+    
+    private func saveArticleToFavorites(article: ArticleDetails) {
+        let realm = try! Realm()
+        
+        let savedArticle = realm.objects(ArticleDetails.self).filter("url = '\(article.url)'")
+        
+        if savedArticle.isEmpty {
+            article.dateSaved = Date()
+            
+            try! realm.write {
+                realm.add(article)
+            }
+            print("added")
+        }
+        else {
+            try! realm.write {
+                realm.delete(savedArticle)
+            }
+            print("deleted")
+        }
+        
     }
     
 }
