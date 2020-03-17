@@ -34,11 +34,14 @@ class ArticleTableViewCell: UITableViewCell {
     
     var onFavoriteClicked: (() -> Void)?
     
-    func configure(_ article: Favorite) {
+    func configure(_ article: ArticlePreview) {
         articleNameLabel.text = article.title
         articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
         if article.isSelected {
             favoriteButton.isSelected = true
+        }
+        else {
+            favoriteButton.isSelected = false
         }
     }
 
@@ -97,8 +100,6 @@ class ArticleTableViewCell: UITableViewCell {
     }
     
     @objc private func favoriteClicked(){
-        favoriteButton.isSelected = !favoriteButton.isSelected
-        setupFavoriteControl()
         onFavoriteClicked!()
     }
     

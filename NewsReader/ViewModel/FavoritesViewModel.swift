@@ -12,29 +12,40 @@ import RxCocoa
 import RealmSwift
 
 class FavoritesViewModel {
-    var favoriteArticles: BehaviorRelay<[Favorite]> = BehaviorRelay<[Favorite]>(value: [])
+    var articlesPreview: BehaviorRelay<[ArticlePreview]> = BehaviorRelay<[ArticlePreview]>(value: [])
+    
+    var favorites: BehaviorRelay<[Favorite]> = BehaviorRelay<[Favorite]>(value: [])
     
     let favoritesRequest =  PublishSubject<Void>()
     
     let refreshTable = PublishSubject<Void>()
     
-    let removeFromFavorites = PublishSubject<Favorite>()
+    let removeFromFavorites = PublishSubject<ArticlePreview>()
     
     
-    func fetch() -> Disposable{
+    func bindFetchFavorites() -> Disposable{
     favoritesRequest.asObservable().flatMap(getFavoritesObservable).subscribe(onNext: { [weak self] favorites in
-            self?.favoriteArticles.accept(favorites)
+            self?.articlesPreview.accept(favorites.0)
+            self?.favorites.accept(favorites.1)
             self?.refreshTable.onNext(())
         })
     }
 
-    private func getFavoritesObservable() -> Observable<[Favorite]> {
-        var observable: Observable<[Favorite]> = Observable.empty()
+    private func getFavoritesObservable() -> Observable<([ArticlePreview], [Favorite])> {
+        var observable: Observable<([ArticlePreview], [Favorite])> = Observable.empty()
+        var articlePreviewList: [ArticlePreview] = []
         
         do {
             let realm = try Realm()
-            let favorites = realm.objects(Favorite.self)
-            observable = Observable<[Favorite]>.just(Array(favorites))
+            let favorites = realm.objects(Favorite.self).sorted(byKeyPath: "dateSaved", ascending: false)
+            
+            for favorite in favorites {
+                let articlePreview = ArticlePreview(title: favorite.title, url: favorite.url, urlToImage: favorite.urlToImage, isSelected: true)
+                
+                articlePreviewList.append(articlePreview)
+            }
+            
+            observable = Observable<([ArticlePreview], [Favorite])>.just((articlePreviewList, Array(favorites)))
             
         } catch  {
             print(error)
@@ -44,17 +55,30 @@ class FavoritesViewModel {
     }
     
     func setRemoveOption() -> Disposable{
-        removeFromFavorites.asObserver().subscribe(onNext: { [weak self] favorite in
+        removeFromFavorites.asObservable().subscribe(onNext: { [weak self] articlePreview in
+            
+            let favorite = Favorite()
+            
+            for article in self?.favorites.value ?? [] {
+                if article.url == articlePreview.url {
+                    favorite.title = article.title
+                    favorite.articleDescription = article.articleDescription
+                    favorite.url = article.url
+                    favorite.urlToImage = article.urlToImage
+                }
+            }
             self?.removeFavorite(favorite: favorite)
-            //self?.refreshTable.onNext(())
         })
     }
     
     private func removeFavorite(favorite: Favorite) {
         do {
             let realm = try Realm()
+            
+            let savedArticle = realm.objects(Favorite.self).filter("url = '\(favorite.url)'")
+            
             try realm.write {
-                realm.delete(favorite)
+                realm.delete(savedArticle)
             }
             
         } catch  {

@@ -19,7 +19,9 @@ enum RefreshType {
 class AllArticlesViewModel {
     
     //MARK: Properties
-    var articles: BehaviorRelay<[Favorite]> = BehaviorRelay<[Favorite]>(value: [])
+    var articlesPreview: BehaviorRelay<[ArticlePreview]> = BehaviorRelay<[ArticlePreview]>(value: [])
+    
+    var articles: BehaviorRelay<[ArticleDetails]> = BehaviorRelay<[ArticleDetails]>(value: [])
     
     let reloadRequest = PublishSubject<RefreshType>()
     
@@ -29,9 +31,8 @@ class AllArticlesViewModel {
     
     let alertOfError = PublishSubject<Void>()
     
-    let saveToFavorites = PublishSubject<Favorite>()
+    let favoritesAction = PublishSubject<ArticlePreview>()
     
-   
     
     //MARK: Private Methods
     func bindFetch() -> Disposable{
@@ -40,13 +41,17 @@ class AllArticlesViewModel {
             .flatMap(getDataObservable)
             .subscribe(onNext: { [weak self] result in
                 switch result {
-                case .success(let allArticles):
-                    self?.articles.accept(allArticles)
+                case .success(let data):
+                    self?.articlesPreview.accept(data.0)
+                    self?.articles.accept(data.1.articles)
                     self?.endRefreshing.onNext(())
                     self?.refreshTable.onNext(())
-                    self?.setDate()
-//                    self?.removeArticles()
-//                    self?.saveArticles(articles: allArticles)
+                    
+                    if data.2 {
+                        self?.setDate()
+                        self?.removeLocalData()
+                        self?.setLocalData(articles: data.1.articles)
+                    }
                     
                 case .failure(let error):
                     print(error)
@@ -57,52 +62,52 @@ class AllArticlesViewModel {
             })
     }
     
-    private func getDataObservable(forceUpdate: RefreshType) -> Observable<Result<[Favorite], Error>>{
-        var newArticleList: [Favorite] = []
+    private func getDataObservable(forceUpdate: RefreshType) -> Observable<Result<([ArticlePreview], Articles, Bool), Error>>{
+        var articlePreviewList: [ArticlePreview] = []
         
         let articleObservable = getArticleObservable(isForceUpdate: forceUpdate)
         let favoriteObservable = getFavoritesObservable()
         
-        let observable = Observable.combineLatest(articleObservable, favoriteObservable, resultSelector: { allArticles, favorites in
+        return Observable.combineLatest(articleObservable.0, favoriteObservable, resultSelector: { allArticles, favorites in
             
             for article in allArticles.articles {
-                let newArticle = Favorite()
-                newArticle.url = article.url
-                newArticle.title = article.title
-                newArticle.urlToImage = article.urlToImage
+                let articlePreview = ArticlePreview(title: article.title, url: article.url, urlToImage: article.urlToImage, isSelected: false)
                 
                 for favorite in favorites {
-                    
                     if article.url == favorite.url {
-                        newArticle.isSelected = true
+                        articlePreview.isSelected = true
                     }
                 }
-                newArticleList.append(newArticle)
+                articlePreviewList.append(articlePreview)
             }
-            return newArticleList
-        }).map { (articles) -> Result<[Favorite],Error> in
+            return (articlePreviewList, allArticles, articleObservable.1)
+            
+        }).map { (articles) -> Result<([ArticlePreview], Articles, Bool),Error> in
             return Result.success(articles)
+            
+        }.catchError { error -> Observable<Result<([ArticlePreview], Articles, Bool), Error>> in
+            let result = Result<([ArticlePreview], Articles, Bool),Error>.failure(error)
+            return Observable.just(result)
         }
-        return observable
-//        return observable.map { (articles) -> Result<Articles,Error> in
-//            return Result.success(articles)
-//        }.catchError { (error) -> Observable<Result<Articles, Error>> in
-//            let result = Result<Articles,Error>.failure(error)
-//            return Observable.just(result)
-//        }
+        
     }
     
-    private func getArticleObservable(isForceUpdate: RefreshType) -> Observable<Articles> {
+    private func getArticleObservable(isForceUpdate: RefreshType) -> (Observable<Articles>, Bool){
         let observable: Observable<Articles>
+        let isOnlineFetch: Bool
         
         if shouldFetchFromInternet(isForceUpdate) {
+            print("Online fetching...")
+            isOnlineFetch = true
             observable = getRequest(url: Urls.articleUrl.rawValue)
         }
         else {
-            observable = Observable.empty()
+            print("Local fetching...")
+            isOnlineFetch = false
+            observable = getLocalData()
         }
         
-        return observable
+        return (observable, isOnlineFetch)
     }
     
     private func getFavoritesObservable() -> Observable<[Favorite]> {
@@ -122,38 +127,85 @@ class AllArticlesViewModel {
     
     private func getLocalData() -> Observable<Articles>{
         var observable: Observable<Articles> = Observable.empty()
-        
+
         do {
             let realm = try Realm()
-            let articles = realm.objects(Articles.self)
-            observable = Observable<Articles>.just(articles.first!)
+            let articles = realm.objects(ArticleDetails.self)
+            
+            let allArticles = Articles()
+            allArticles.articles = Array(articles)
+                
+            observable = Observable<Articles>.just(allArticles)
             
         } catch  {
             print(error)
         }
-        
+
         return observable
     }
     
+    private func setLocalData(articles: [ArticleDetails]) {
+        do {
+            let realm = try Realm()
+            
+            for article in articles {
+                article.localStored = true
+            }
+            
+            try realm.write {
+                realm.add(articles)
+            }
+            
+        } catch  {
+            print(error)
+        }
+    }
+    
+    private func removeLocalData() {
+        do {
+            let realm = try Realm()
+            let articles = realm.objects(ArticleDetails.self).filter("localStored = true")
+            
+            try realm.write {
+                realm.delete(articles)
+            }
+
+        } catch  {
+            print(error)
+        }
+    }
+    
     func setSaveOption() -> Disposable{
-        saveToFavorites.asObserver().subscribe(onNext: { [weak self] favorite in
-            if favorite.isSelected {
+        favoritesAction.asObservable().subscribe(onNext: { [weak self] articlePreview in
+            let favorite = Favorite()
+            
+            for article in self?.articles.value ?? [] {
+                if article.url == articlePreview.url {
+                    favorite.title = article.title
+                    favorite.articleDescription = article.articleDescription
+                    favorite.url = article.url
+                    favorite.urlToImage = article.urlToImage
+                }
+            }
+            
+            if articlePreview.isSelected {
                 self?.saveFavorite(favorite: favorite)
             }
             else {
                 self?.removeFavorite(favorite: favorite)
             }
-            
-            
         })
     }
     
     private func saveFavorite(favorite: Favorite) {
         do {
+            favorite.dateSaved = Date()
+            
             let realm = try Realm()
             try realm.write {
                 realm.add(favorite)
             }
+            refreshTable.onNext(())
             
         } catch  {
             print(error)
@@ -169,31 +221,7 @@ class AllArticlesViewModel {
             try realm.write {
                 realm.delete(savedArticle)
             }
-            
-        } catch  {
-            print(error)
-        }
-    }
-    
-    private func saveArticles(articles: Articles) {
-        do {
-            let realm = try Realm()
-            try realm.write {
-                realm.add(articles)
-            }
-            
-        } catch  {
-            print(error)
-        }
-    }
-    
-    private func removeArticles() {
-        do {
-            let realm = try Realm()
-            let articles = realm.objects(Articles.self)
-            try realm.write {
-                realm.delete(articles)
-            }
+            refreshTable.onNext(())
             
         } catch  {
             print(error)
@@ -221,7 +249,6 @@ class AllArticlesViewModel {
             let minutes = seconds / 60;
             
             if minutes > 5 || forceUpdate == RefreshType.network {
-                print("Online fetching...")
                 onlineFetch = true
             }
         }

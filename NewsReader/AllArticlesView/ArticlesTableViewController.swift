@@ -37,16 +37,14 @@ class ArticlesTableViewController: UITableViewController {
         
         setObservers()
         
-        reload(forceUpdate: RefreshType.general)
-        
         articleViewModel.setSaveOption().disposed(by: bag)
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         tabBarController?.navigationItem.title = "Factory"
+        reload(forceUpdate: RefreshType.general)
     }
     
     // MARK: - Table view data source
@@ -55,7 +53,7 @@ class ArticlesTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articleViewModel.articles.value.count
+        return articleViewModel.articlesPreview.value.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -63,15 +61,14 @@ class ArticlesTableViewController: UITableViewController {
             fatalError("The dequeued cell is not an instance of ArticleTableViewCell.")
         }
 
-        let article = articleViewModel.articles.value[indexPath.row]
+        let article = articleViewModel.articlesPreview.value[indexPath.row]
 
         cell.configure(article)
         
         cell.onFavoriteClicked = { [weak self] in
             print("clicked")
             article.isSelected = !article.isSelected
-            self?.articleViewModel.saveToFavorites.onNext(article)
-            //self?.saveArticleToFavorites(article: article)
+            self?.articleViewModel.favoritesAction.onNext(article)
         }
         
         return cell
@@ -79,15 +76,15 @@ class ArticlesTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-//        let layout = UICollectionViewFlowLayout()
-//        layout.scrollDirection = .horizontal
-//        let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
-//
-//        let singleArticleViewModel = SingleArticleViewModel(articles:articleViewModel.articles.value, index: indexPath.row)
-//
-//        articleCollectionViewController.singleArticleViewModel = singleArticleViewModel
-//
-//        navigationController?.pushViewController(articleCollectionViewController, animated: true)
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
+
+        let singleArticleViewModel = SingleArticleViewModel(articles:articleViewModel.articles.value, index: indexPath.row)
+
+        articleCollectionViewController.singleArticleViewModel = singleArticleViewModel
+
+        navigationController?.pushViewController(articleCollectionViewController, animated: true)
     }
     
     
@@ -109,8 +106,8 @@ class ArticlesTableViewController: UITableViewController {
         myRefreshControl.tintColor = .gray
         myRefreshControl.attributedTitle = NSAttributedString(string: "Fetching Data ...", attributes: [NSAttributedString.Key.foregroundColor:UIColor.gray])
         
-    myRefreshControl.rx.controlEvent(.valueChanged).asObservable().subscribe(onNext: { [weak self] in
-        self?.reload(forceUpdate: RefreshType.network)
+        myRefreshControl.rx.controlEvent(.valueChanged).asObservable().subscribe(onNext: { [weak self] in
+            self?.reload(forceUpdate: RefreshType.network)
         
         }).disposed(by: bag)
     }
@@ -141,26 +138,5 @@ class ArticlesTableViewController: UITableViewController {
         return alert
     }
     
-    private func saveArticleToFavorites(article: ArticleDetails) {
-        let realm = try! Realm()
-        
-        let savedArticle = realm.objects(ArticleDetails.self).filter("url = '\(article.url)'")
-        
-        if savedArticle.isEmpty {
-            article.dateSaved = Date()
-            
-            try! realm.write {
-                realm.add(article)
-            }
-            print("added")
-        }
-        else {
-            try! realm.write {
-                realm.delete(savedArticle)
-            }
-            print("deleted")
-        }
-        
-    }
-    
+
 }

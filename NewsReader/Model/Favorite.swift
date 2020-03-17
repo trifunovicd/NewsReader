@@ -9,9 +9,11 @@
 import Foundation
 import RealmSwift
 
-class Favorite: Object {
-    @objc dynamic var url: String = ""
+class Favorite: Object, News {
     @objc dynamic var title: String = ""
+    @objc dynamic var articleDescription: String = ""
+    @objc dynamic var url: String = ""
     @objc dynamic var urlToImage: String = ""
-    @objc dynamic var isSelected: Bool = false
+    @objc dynamic var dateSaved: Date?
+    
 }

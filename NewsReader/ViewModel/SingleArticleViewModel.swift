@@ -12,11 +12,11 @@ import RxSwift
 class SingleArticleViewModel {
     
     //MARK: Properties
-    let articles: [ArticleDetails]
+    let articles: [News]
     let index: Int
     let scrollToItem = PublishSubject<IndexPath>()
     
-    init(articles: [ArticleDetails], index: Int) {
+    init(articles: [News], index: Int) {
         self.articles = articles
         self.index = index
     }

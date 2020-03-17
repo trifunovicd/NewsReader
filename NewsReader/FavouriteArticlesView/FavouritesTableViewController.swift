@@ -27,8 +27,7 @@ class FavouritesTableViewController: UITableViewController {
         
         setObservers()
         
-        favoriteViewModel.fetch().disposed(by: bag)
-        favoriteViewModel.favoritesRequest.onNext(())
+        favoriteViewModel.bindFetchFavorites().disposed(by: bag)
         
         favoriteViewModel.setRemoveOption().disposed(by: bag)
         
@@ -38,6 +37,7 @@ class FavouritesTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         tabBarController?.navigationItem.title = "Favorites"
+        favoriteViewModel.favoritesRequest.onNext(())
     }
 
     
@@ -47,7 +47,7 @@ class FavouritesTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return favoriteViewModel.favoriteArticles.value.count
+        return favoriteViewModel.articlesPreview.value.count
     }
 
     
@@ -56,16 +56,30 @@ class FavouritesTableViewController: UITableViewController {
             fatalError("The dequeued cell is not an instance of FavoriteTableViewCell.")
         }
 
-        let article = favoriteViewModel.favoriteArticles.value[indexPath.row]
+        let article = favoriteViewModel.articlesPreview.value[indexPath.row]
 
         cell.configure(article)
         
         cell.onFavoriteClicked = { [weak self] in
             print("clicked")
             self?.favoriteViewModel.removeFromFavorites.onNext(article)
+            self?.favoriteViewModel.favoritesRequest.onNext(())
         }
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
+
+        let singleArticleViewModel = SingleArticleViewModel(articles:favoriteViewModel.favorites.value, index: indexPath.row)
+
+        articleCollectionViewController.singleArticleViewModel = singleArticleViewModel
+
+        navigationController?.pushViewController(articleCollectionViewController, animated: true)
     }
     
 

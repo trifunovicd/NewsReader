@@ -68,10 +68,10 @@ class ArticleCollectionViewCell: UICollectionViewCell {
         onOpenWebviewClicked!()
     }
     
-    func configure(_ article: ArticleDetails){
+    func configure(_ article: News){
         articleImageView.loadImageUsingUrlString(urlString: article.urlToImage)
         articleNameLabel.text = article.title
-        articleDescriptionTextView.text = article.article_description
+        articleDescriptionTextView.text = article.articleDescription
         openInBrowserButton.addTarget(self, action: #selector(openInBrowser), for: .touchUpInside)
     }
     
