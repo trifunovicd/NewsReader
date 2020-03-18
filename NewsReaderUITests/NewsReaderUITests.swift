@@ -27,7 +27,15 @@ class NewsReaderUITests: XCTestCase {
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
         app.launch()
-
+        
+        app.tables/*@START_MENU_TOKEN@*/.staticTexts["Coronavirus hits all 50 US states as deaths rise"]/*[[".cells.staticTexts[\"Coronavirus hits all 50 US states as deaths rise\"]",".staticTexts[\"Coronavirus hits all 50 US states as deaths rise\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.navigationBars["NewsReader.ArticleCollectionView"].buttons["Factory"].tap()
+        
+        let tabBarsQuery = app.tabBars
+        tabBarsQuery.buttons["Favorites"].tap()
+        tabBarsQuery.buttons["Most Recent"].tap()
+        
+        
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }

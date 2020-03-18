@@ -22,6 +22,8 @@ class NewsReaderTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let article = ArticlePreview(title: "article", url: "url", urlToImage: "imageurl", isSelected: false)
+        XCTAssertEqual(article.isSelected, false)
     }
 
     func testPerformanceExample() {
