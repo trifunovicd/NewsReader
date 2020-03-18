@@ -32,6 +32,7 @@
 		B9835D142405064C00EE6F32 /* NewsReaderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835D132405064C00EE6F32 /* NewsReaderUITests.swift */; };
 		B9C286982417D14D0041EB57 /* AllArticlesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C286972417D14D0041EB57 /* AllArticlesViewModel.swift */; };
 		B9C295642406661200828586 /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C295632406661200828586 /* ArticleCollectionViewCell.swift */; };
+		B9FBCEA2242209FB0071E533 /* WebViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FBCEA1242209FB0071E533 /* WebViewViewModel.swift */; };
 		B9FFE4E62407E9D8009FA7AD /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FFE4E52407E9D8009FA7AD /* WebViewController.swift */; };
 		C6F6E981AD8171A7470BCCA9 /* Pods_NewsReaderTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7BFEAE9BA908A3DC21D2D42 /* Pods_NewsReaderTests.framework */; };
 /* End PBXBuildFile section */
@@ -90,6 +91,7 @@
 		B9835D152405064C00EE6F32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9C286972417D14D0041EB57 /* AllArticlesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllArticlesViewModel.swift; sourceTree = "<group>"; };
 		B9C295632406661200828586 /* ArticleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewCell.swift; sourceTree = "<group>"; };
+		B9FBCEA1242209FB0071E533 /* WebViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewModel.swift; sourceTree = "<group>"; };
 		B9FFE4E52407E9D8009FA7AD /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		C7BFEAE9BA908A3DC21D2D42 /* Pods_NewsReaderTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewsReaderTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64AF0614739C918D7BE7504 /* Pods-NewsReaderTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsReaderTests.debug.xcconfig"; path = "Target Support Files/Pods-NewsReaderTests/Pods-NewsReaderTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 				B9C286972417D14D0041EB57 /* AllArticlesViewModel.swift */,
 				B948A959241B76EA00EAF36F /* SingleArticleViewModel.swift */,
 				B9242E5E241FAA6300347747 /* FavoritesViewModel.swift */,
+				B9FBCEA1242209FB0071E533 /* WebViewViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -521,6 +524,7 @@
 				B9242E61241FAEE000347747 /* FavoriteTableViewCell.swift in Sources */,
 				B96C2FA4240514B20039C10B /* Article.swift in Sources */,
 				B9FFE4E62407E9D8009FA7AD /* WebViewController.swift in Sources */,
+				B9FBCEA2242209FB0071E533 /* WebViewViewModel.swift in Sources */,
 				B9C295642406661200828586 /* ArticleCollectionViewCell.swift in Sources */,
 				B9835CF42405064A00EE6F32 /* SceneDelegate.swift in Sources */,
 				B9C286982417D14D0041EB57 /* AllArticlesViewModel.swift in Sources */,

@@ -23,7 +23,6 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //navigationController?.navigationBar.tintColor = UIColor.white
         collectionView?.backgroundColor = .white
         collectionView.isPagingEnabled = true
         
@@ -94,7 +93,8 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
     //MARK: Private Methods
     private func openInBrowser(articleUrl: String){
         let webViewController = WebViewController()
-        webViewController.setWebViewURL(articleUrl)
+        let webViewViewModel = WebViewViewModel(url: articleUrl)
+        webViewController.webViewViewModel = webViewViewModel
         navigationController?.pushViewController(webViewController, animated: true)
     }
     

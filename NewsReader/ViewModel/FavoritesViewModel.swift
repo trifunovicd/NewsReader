@@ -12,6 +12,8 @@ import RxCocoa
 import RealmSwift
 
 class FavoritesViewModel {
+    
+    //MARK: Properties
     var articlesPreview: BehaviorRelay<[ArticlePreview]> = BehaviorRelay<[ArticlePreview]>(value: [])
     
     var favorites: BehaviorRelay<[Favorite]> = BehaviorRelay<[Favorite]>(value: [])
@@ -23,6 +25,7 @@ class FavoritesViewModel {
     let removeFromFavorites = PublishSubject<ArticlePreview>()
     
     
+    //MARK: Private Methods
     func bindFetchFavorites() -> Disposable{
     favoritesRequest.asObservable().flatMap(getFavoritesObservable).subscribe(onNext: { [weak self] favorites in
             self?.articlesPreview.accept(favorites.0)

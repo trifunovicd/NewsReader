@@ -25,8 +25,6 @@ class ArticlesTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        setupNavigationBar()
         
         setupRefreshControl()
         
@@ -89,12 +87,6 @@ class ArticlesTableViewController: UITableViewController {
     
     
     //MARK: Private Methods
-    private func setupNavigationBar(){
-        tabBarController?.navigationItem.title = "Factory"
-        //tabBarController?.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        tabBarController?.navigationController?.navigationBar.barTintColor = UIColor(red: 28.0/255.0, green: 68.0/255.0, blue: 156.0/255.0, alpha: 1.0)
-    }
-    
     private func setupRefreshControl(){
         // Add Refresh Control to Table View
         if #available(iOS 10.0, *) {

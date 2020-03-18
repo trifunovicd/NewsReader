@@ -83,6 +83,7 @@ class FavouritesTableViewController: UITableViewController {
     }
     
 
+    //MARK: Private Methods
     private func setObservers() {
         favoriteViewModel.refreshTable.subscribe(onNext: { [weak self] in
             self?.tableView.reloadData()

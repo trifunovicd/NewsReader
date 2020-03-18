@@ -8,11 +8,17 @@
 
 import UIKit
 import WebKit
+import RxSwift
 
 class WebViewController: UIViewController, WKNavigationDelegate {
 
+    //MARK: Properties
     private var webView: WKWebView!
-    private var url: URL?
+    
+    var webViewViewModel: WebViewViewModel!
+    
+    private let bag = DisposeBag()
+    
     
     override func loadView() {
         webView = WKWebView()
@@ -22,16 +28,18 @@ class WebViewController: UIViewController, WKNavigationDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if let url = url {
-            webView.load(URLRequest(url: url))
-            webView.allowsBackForwardNavigationGestures = true
-        }
+        
+        setObserver()
+        
+        webViewViewModel.loadNews()
         
     }
-    
-    func setWebViewURL(_ url: String){
-        self.url = URL(string: url)
-    }
 
+    //MARK: Private Methods
+    private func setObserver() {
+        webViewViewModel.loadArticle.subscribe(onNext: { [weak self] url in
+            self?.webView.load(URLRequest(url: url))
+            self?.webView.allowsBackForwardNavigationGestures = true
+        }).disposed(by: bag)
+    }
 }
