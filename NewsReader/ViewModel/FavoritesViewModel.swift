@@ -27,15 +27,22 @@ class FavoritesViewModel {
     
     //MARK: Private Methods
     func bindFetchFavorites() -> Disposable{
-    favoritesRequest.asObservable().flatMap(getFavoritesObservable).subscribe(onNext: { [weak self] favorites in
-            self?.articlesPreview.accept(favorites.0)
-            self?.favorites.accept(favorites.1)
-            self?.refreshTable.onNext(())
+        favoritesRequest.asObservable().flatMap(getFavoritesObservable).subscribe(onNext: { [weak self] result in
+            
+            switch result {
+            case .success(let data):
+                self?.articlesPreview.accept(data.0)
+                self?.favorites.accept(data.1)
+                self?.refreshTable.onNext(())
+            case .failure(let error):
+                print(error)
+            }
+                
         })
     }
 
-    private func getFavoritesObservable() -> Observable<([ArticlePreview], [Favorite])> {
-        var observable: Observable<([ArticlePreview], [Favorite])> = Observable.empty()
+    private func getFavoritesObservable() -> Observable<Result<([ArticlePreview], [Favorite]), Error>> {
+        var observable: Observable<Result<([ArticlePreview], [Favorite]), Error>> = Observable.empty()
         var articlePreviewList: [ArticlePreview] = []
         
         do {
@@ -48,10 +55,11 @@ class FavoritesViewModel {
                 articlePreviewList.append(articlePreview)
             }
             
-            observable = Observable<([ArticlePreview], [Favorite])>.just((articlePreviewList, Array(favorites)))
+            observable = Observable<Result<([ArticlePreview], [Favorite]), Error>>.just(.success((articlePreviewList, Array(favorites))))
+            
             
         } catch  {
-            print(error)
+            observable = Observable<Result<([ArticlePreview], [Favorite]), Error>>.just(.failure(error))
         }
         
         return observable

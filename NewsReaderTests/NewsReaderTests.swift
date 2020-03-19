@@ -7,23 +7,53 @@
 //
 
 import XCTest
+import RxSwift
+import RxTest
 @testable import NewsReader
 
+class Recorder<T> {
+    var items = [T]()
+    let bag = DisposeBag()
+
+    func on(arraySubject: PublishSubject<[T]>) {
+        arraySubject.subscribe(onNext: { value in
+            self.items = value
+        }).disposed(by: bag)
+    }
+
+    func on(valueSubject: PublishSubject<T>) {
+        valueSubject.subscribe(onNext: { value in
+            self.items.append(value)
+        }).disposed(by: bag)
+    }
+}
+
 class NewsReaderTests: XCTestCase {
+    
+    var favoritesViewModel: FavoritesViewModel!
+    let bag = DisposeBag()
 
     override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        super.setUp()
+        favoritesViewModel = FavoritesViewModel()
     }
 
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        favoritesViewModel = nil
+        super.tearDown()
     }
 
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        let article = ArticlePreview(title: "article", url: "url", urlToImage: "imageurl", isSelected: false)
-        XCTAssertEqual(article.isSelected, false)
+    func testFavoritesRequest() {
+        
+        //Given
+        let count = 6
+        
+        //When
+        favoritesViewModel.bindFetchFavorites().disposed(by: bag)
+        favoritesViewModel.favoritesRequest.onNext(())
+        
+        //Then
+        XCTAssertEqual(favoritesViewModel.articlesPreview.value.count, count)
     }
 
     func testPerformanceExample() {
