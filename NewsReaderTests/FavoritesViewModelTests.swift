@@ -113,6 +113,8 @@ class FavoritesViewModelTests: QuickSpec {
                         
                         sut.removeFromFavorites.onNext(article)
                         
+                        sut.favoritesRequest.onNext(())
+                        
                         scheduler.start()
                     }
                     
@@ -120,18 +122,8 @@ class FavoritesViewModelTests: QuickSpec {
                         expect(articleToDelete.events).to(equal([.next(0, article)]))
                     }
                     
-                    it("should remove article from favorites") {
-                        do {
-                            let realm = try Realm()
-
-                            let savedArticle = realm.objects(Favorite.self).filter("url = '\(article.url)'")
-
-                            expect(savedArticle).to(beEmpty())
-
-
-                        } catch  {
-                            fail("Expecting to get failure")
-                        }
+                    it("should show empty list of preview articles") {
+                        expect(result.events.last).to(equal(.next(2, [])))
                     }
                 }
             }
