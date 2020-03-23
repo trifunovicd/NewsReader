@@ -26,8 +26,8 @@ class FavoritesViewModel {
     
     
     //MARK: Private Methods
-    func bindFetchFavorites() -> Disposable{
-        favoritesRequest.asObservable().flatMap(getFavoritesObservable).subscribe(onNext: { [weak self] result in
+    func bindFetchFavorites(observable: @escaping ()-> Observable<Result<([ArticlePreview], [Favorite]), Error>>, scheduler: SchedulerType) -> Disposable{
+        favoritesRequest.asObservable().observeOn(scheduler) .flatMap(observable).subscribe(onNext: { [weak self] result in
             
             switch result {
             case .success(let data):
@@ -41,7 +41,7 @@ class FavoritesViewModel {
         })
     }
 
-    private func getFavoritesObservable() -> Observable<Result<([ArticlePreview], [Favorite]), Error>> {
+    func getFavoritesObservable() -> Observable<Result<([ArticlePreview], [Favorite]), Error>> {
         var observable: Observable<Result<([ArticlePreview], [Favorite]), Error>> = Observable.empty()
         var articlePreviewList: [ArticlePreview] = []
         
@@ -65,8 +65,8 @@ class FavoritesViewModel {
         return observable
     }
     
-    func setRemoveOption() -> Disposable{
-        removeFromFavorites.asObservable().subscribe(onNext: { [weak self] articlePreview in
+    func setRemoveOption(scheduler: SchedulerType) -> Disposable{
+        removeFromFavorites.asObservable().observeOn(scheduler).subscribe(onNext: { [weak self] articlePreview in
             
             let favorite = Favorite()
             

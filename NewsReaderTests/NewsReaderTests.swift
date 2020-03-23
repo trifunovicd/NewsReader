@@ -43,18 +43,18 @@ class NewsReaderTests: XCTestCase {
         super.tearDown()
     }
 
-    func testFavoritesRequest() {
-        
-        //Given
-        let count = 6
-        
-        //When
-        favoritesViewModel.bindFetchFavorites().disposed(by: bag)
-        favoritesViewModel.favoritesRequest.onNext(())
-        
-        //Then
-        XCTAssertEqual(favoritesViewModel.articlesPreview.value.count, count)
-    }
+//    func testFavoritesRequest() {
+//        
+//        //Given
+//        let count = 6
+//        
+//        //When
+//        favoritesViewModel.bindFetchFavorites().disposed(by: bag)
+//        favoritesViewModel.favoritesRequest.onNext(())
+//        
+//        //Then
+//        XCTAssertEqual(favoritesViewModel.articlesPreview.value.count, count)
+//    }
 
     func testPerformanceExample() {
         // This is an example of a performance test case.

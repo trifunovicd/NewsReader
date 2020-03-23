@@ -27,9 +27,9 @@ class FavouritesTableViewController: UITableViewController {
         
         setObservers()
         
-        favoriteViewModel.bindFetchFavorites().disposed(by: bag)
+        favoriteViewModel.bindFetchFavorites(observable: favoriteViewModel.getFavoritesObservable, scheduler: MainScheduler.instance).disposed(by: bag)
         
-        favoriteViewModel.setRemoveOption().disposed(by: bag)
+        favoriteViewModel.setRemoveOption(scheduler: MainScheduler.instance).disposed(by: bag)
         
     }
     

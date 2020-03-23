@@ -8,7 +8,11 @@
 
 import Foundation
 
-class ArticlePreview {
+class ArticlePreview: Equatable{
+    static func == (lhs: ArticlePreview, rhs: ArticlePreview) -> Bool {
+        return lhs.title == rhs.title && lhs.url == rhs.url && lhs.urlToImage == rhs.urlToImage && lhs.isSelected == rhs.isSelected
+    }
+    
     var title: String
     var url: String
     var urlToImage: String
