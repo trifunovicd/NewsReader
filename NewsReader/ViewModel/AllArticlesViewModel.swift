@@ -25,26 +25,27 @@ class AllArticlesViewModel {
     
     let reloadRequest = PublishSubject<RefreshType>()
     
-    let endRefreshing = PublishSubject<Void>()
+    let endRefreshing = PublishSubject<Bool>()
     
     let refreshTable = PublishSubject<Void>()
     
-    let alertOfError = PublishSubject<Void>()
+    let alertOfError = PublishSubject<Bool>()
     
     let favoritesAction = PublishSubject<ArticlePreview>()
     
     
     //MARK: Private Methods
-    func bindFetch() -> Disposable{
+    func bindFetch(observable: @escaping (_ forceUpdate: RefreshType)-> Observable<Result<([ArticlePreview], Articles, Bool), Error>>, scheduler: SchedulerType) -> Disposable{
         reloadRequest
             .asObservable()
-            .flatMap(getDataObservable)
+            .observeOn(scheduler)
+            .flatMap(observable)
             .subscribe(onNext: { [weak self] result in
                 switch result {
                 case .success(let data):
                     self?.articlesPreview.accept(data.0)
                     self?.articles.accept(data.1.articles)
-                    self?.endRefreshing.onNext(())
+                    self?.endRefreshing.onNext(true)
                     self?.refreshTable.onNext(())
                     
                     if data.2 {
@@ -55,14 +56,14 @@ class AllArticlesViewModel {
                     
                 case .failure(let error):
                     print(error)
-                    self?.endRefreshing.onNext(())
-                    self?.alertOfError.onNext(())
+                    self?.endRefreshing.onNext(true)
+                    self?.alertOfError.onNext(true)
                     
                 }
             })
     }
     
-    private func getDataObservable(forceUpdate: RefreshType) -> Observable<Result<([ArticlePreview], Articles, Bool), Error>>{
+    func getDataObservable(forceUpdate: RefreshType) -> Observable<Result<([ArticlePreview], Articles, Bool), Error>>{
         var articlePreviewList: [ArticlePreview] = []
         
         let articleObservable = getArticleObservable(isForceUpdate: forceUpdate)
@@ -175,8 +176,8 @@ class AllArticlesViewModel {
         }
     }
     
-    func setSaveOption() -> Disposable{
-        favoritesAction.asObservable().subscribe(onNext: { [weak self] articlePreview in
+    func setSaveOption(scheduler: SchedulerType) -> Disposable{
+        favoritesAction.asObservable().observeOn(scheduler).subscribe(onNext: { [weak self] articlePreview in
             let favorite = Favorite()
             
             for article in self?.articles.value ?? [] {

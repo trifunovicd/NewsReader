@@ -31,11 +31,11 @@ class ArticlesTableViewController: UITableViewController {
         tableView.register(ArticleTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.rowHeight = 90
         
-        articleViewModel.bindFetch().disposed(by: bag)
+        articleViewModel.bindFetch(observable: articleViewModel.getDataObservable(forceUpdate:), scheduler: MainScheduler.instance).disposed(by: bag)
         
         setObservers()
         
-        articleViewModel.setSaveOption().disposed(by: bag)
+        articleViewModel.setSaveOption(scheduler: MainScheduler.instance).disposed(by: bag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -113,11 +113,11 @@ class ArticlesTableViewController: UITableViewController {
             self?.tableView.reloadData()
         }).disposed(by: bag)
         
-        articleViewModel.endRefreshing.subscribe(onNext: { [weak self] in
+        articleViewModel.endRefreshing.subscribe(onNext: { [weak self] bool in
             self?.myRefreshControl.endRefreshing()
         }).disposed(by: bag)
         
-        articleViewModel.alertOfError.subscribe(onNext: { [weak self] in
+        articleViewModel.alertOfError.subscribe(onNext: { [weak self] bool in
             let alert = self?.getErrorAlert()
             self?.present(alert!, animated: true, completion: nil)
             }).disposed(by: bag)
@@ -129,6 +129,4 @@ class ArticlesTableViewController: UITableViewController {
         
         return alert
     }
-    
-
 }

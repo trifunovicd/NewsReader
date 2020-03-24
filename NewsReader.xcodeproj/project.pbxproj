@@ -31,6 +31,9 @@
 		B9835CFE2405064B00EE6F32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9835CFC2405064B00EE6F32 /* LaunchScreen.storyboard */; };
 		B9835D092405064C00EE6F32 /* NewsReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835D082405064C00EE6F32 /* NewsReaderTests.swift */; };
 		B9835D142405064C00EE6F32 /* NewsReaderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9835D132405064C00EE6F32 /* NewsReaderUITests.swift */; };
+		B9A0E1CC2429EC1E0090AD95 /* AllArticlesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A0E1CB2429EC1E0090AD95 /* AllArticlesViewModelTests.swift */; };
+		B9A0E1D0242A4CDC0090AD95 /* SingleArticleViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A0E1CF242A4CDC0090AD95 /* SingleArticleViewModelTests.swift */; };
+		B9A0E1D2242A509A0090AD95 /* WebViewViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A0E1D1242A509A0090AD95 /* WebViewViewModelTests.swift */; };
 		B9C286982417D14D0041EB57 /* AllArticlesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C286972417D14D0041EB57 /* AllArticlesViewModel.swift */; };
 		B9C295642406661200828586 /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C295632406661200828586 /* ArticleCollectionViewCell.swift */; };
 		B9FBCEA2242209FB0071E533 /* WebViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FBCEA1242209FB0071E533 /* WebViewViewModel.swift */; };
@@ -91,6 +94,9 @@
 		B9835D0F2405064C00EE6F32 /* NewsReaderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewsReaderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9835D132405064C00EE6F32 /* NewsReaderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsReaderUITests.swift; sourceTree = "<group>"; };
 		B9835D152405064C00EE6F32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B9A0E1CB2429EC1E0090AD95 /* AllArticlesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllArticlesViewModelTests.swift; sourceTree = "<group>"; };
+		B9A0E1CF242A4CDC0090AD95 /* SingleArticleViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleArticleViewModelTests.swift; sourceTree = "<group>"; };
+		B9A0E1D1242A509A0090AD95 /* WebViewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewModelTests.swift; sourceTree = "<group>"; };
 		B9C286972417D14D0041EB57 /* AllArticlesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllArticlesViewModel.swift; sourceTree = "<group>"; };
 		B9C295632406661200828586 /* ArticleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewCell.swift; sourceTree = "<group>"; };
 		B9FBCEA1242209FB0071E533 /* WebViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewModel.swift; sourceTree = "<group>"; };
@@ -205,7 +211,10 @@
 			isa = PBXGroup;
 			children = (
 				B9835D082405064C00EE6F32 /* NewsReaderTests.swift */,
+				B9A0E1CB2429EC1E0090AD95 /* AllArticlesViewModelTests.swift */,
+				B9A0E1CF242A4CDC0090AD95 /* SingleArticleViewModelTests.swift */,
 				B901A5F52423B66300729A64 /* FavoritesViewModelTests.swift */,
+				B9A0E1D1242A509A0090AD95 /* WebViewViewModelTests.swift */,
 				B9835D0A2405064C00EE6F32 /* Info.plist */,
 			);
 			path = NewsReaderTests;
@@ -544,8 +553,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9A0E1CC2429EC1E0090AD95 /* AllArticlesViewModelTests.swift in Sources */,
 				B901A5F62423B66300729A64 /* FavoritesViewModelTests.swift in Sources */,
 				B9835D092405064C00EE6F32 /* NewsReaderTests.swift in Sources */,
+				B9A0E1D2242A509A0090AD95 /* WebViewViewModelTests.swift in Sources */,
+				B9A0E1D0242A4CDC0090AD95 /* SingleArticleViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
