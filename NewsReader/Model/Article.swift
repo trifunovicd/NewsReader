@@ -23,13 +23,4 @@ class ArticleDetails: Object, News, Codable {
     private enum CodingKeys: String, CodingKey {
         case title, articleDescription = "description", url, urlToImage
     }
-    
-//    convenience init(title: String, articleDescription: String, url: String, urlToImage: String, localStored: Bool) {
-//
-//        self.title = title
-//        self.articleDescription = articleDescription
-//        self.url = url
-//        self.urlToImage = urlToImage
-//        self.localStored = localStored
-//    }
 }

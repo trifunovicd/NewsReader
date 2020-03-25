@@ -17,7 +17,7 @@ private let cellIdentifier = "ArticleTableViewCell"
 class ArticlesTableViewController: UITableViewController {
     
     //MARK: Properties
-    private let articleViewModel = AllArticlesViewModel()
+    private let articleViewModel = AllArticlesViewModel(observable: getRequest(url: Urls.articleUrl.rawValue))
     
     private let myRefreshControl = UIRefreshControl()
     

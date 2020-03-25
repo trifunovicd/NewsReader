@@ -33,9 +33,15 @@ class AllArticlesViewModel {
     
     let favoritesAction = PublishSubject<ArticlePreview>()
     
+    let articleObservable: Observable<Articles>!
+    
+    init(observable: Observable<Articles>) {
+        self.articleObservable = observable
+    }
+    
     
     //MARK: Private Methods
-    func bindFetch(observable: @escaping (_ forceUpdate: RefreshType)-> Observable<Result<([ArticlePreview], Articles, Bool), Error>>, scheduler: SchedulerType) -> Disposable{
+    func bindFetch(observable: @escaping (RefreshType) -> Observable<Result<([ArticlePreview], Articles, Bool), Error>>, scheduler: SchedulerType) -> Disposable{
         reloadRequest
             .asObservable()
             .observeOn(scheduler)
@@ -100,7 +106,7 @@ class AllArticlesViewModel {
         if shouldFetchFromInternet(isForceUpdate) {
             print("Online fetching...")
             isOnlineFetch = true
-            observable = getRequest(url: Urls.articleUrl.rawValue)
+            observable = articleObservable
         }
         else {
             print("Local fetching...")
@@ -260,3 +266,5 @@ class AllArticlesViewModel {
         return onlineFetch
     }
 }
+
+

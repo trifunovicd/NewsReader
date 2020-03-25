@@ -26,23 +26,25 @@ class CustomImageView : UIImageView {
             return
         }
         
-        URLSession.shared.dataTask(with: url!, completionHandler: {data,_,error in
-            
-            if error != nil {
-                print(error!)
-                return
-            }
-            
-            DispatchQueue.main.async {
-                let imageToCache = UIImage(data: data!)
+        if let url = url {
+            URLSession.shared.dataTask(with: url, completionHandler: {data,_,error in
                 
-                if self.imageUrlString == urlString {
-                    self.image = imageToCache
+                if error != nil {
+                    print(error!)
+                    return
                 }
                 
-                imageCache.setObject(imageToCache!, forKey: urlString as NSString)
-            }
-            
-        }).resume()
+                DispatchQueue.main.async {
+                    let imageToCache = UIImage(data: data!)
+                    
+                    if self.imageUrlString == urlString {
+                        self.image = imageToCache
+                    }
+                    
+                    imageCache.setObject(imageToCache!, forKey: urlString as NSString)
+                }
+                
+            }).resume()
+        }
     }
 }
