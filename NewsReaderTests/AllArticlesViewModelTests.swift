@@ -55,8 +55,7 @@ class AllArticlesViewModelTests: QuickSpec {
                     fail("Expecting to get failure")
                 }
                 
-                defaults = UserDefaults.standard
-                defaults.removeObject(forKey: "Date")
+                defaults = UserDefaults(suiteName: "testDefaults")
                 
                 sut.articlesPreview.bind(to: result).disposed(by: disposeBag)
 
@@ -67,7 +66,12 @@ class AllArticlesViewModelTests: QuickSpec {
             }
             
             
-            context("on local fetch") {
+            afterEach {
+                UserDefaults().removePersistentDomain(forName: "testDefaults")
+            }
+            
+            
+            context("on load") {
                 context("if error occurred") {
                     beforeEach {
                         sut.bindFetch(observable: self.getError(forceUpdate:), scheduler: scheduler).disposed(by: disposeBag)
@@ -128,7 +132,7 @@ class AllArticlesViewModelTests: QuickSpec {
             }
 
             
-            context("on online fetch") {
+            context("on pull to refresh") {
                 context("if error occurred") {
                     beforeEach {
                         sut.bindFetch(observable: self.getError(forceUpdate:), scheduler: scheduler).disposed(by: disposeBag)
