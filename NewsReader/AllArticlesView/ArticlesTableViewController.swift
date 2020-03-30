@@ -23,6 +23,8 @@ class ArticlesTableViewController: UITableViewController {
     
     private let bag = DisposeBag()
     
+    weak var parentCoordinator: ArticlesCoordinator?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,7 +43,7 @@ class ArticlesTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        tabBarController?.navigationItem.title = "Factory"
+        //tabBarController?.navigationItem.title = "Factory"
         reload(forceUpdate: RefreshType.general)
     }
     
@@ -73,16 +75,8 @@ class ArticlesTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
-
-        let singleArticleViewModel = SingleArticleViewModel(articles:articleViewModel.articles.value, index: indexPath.row)
-
-        articleCollectionViewController.singleArticleViewModel = singleArticleViewModel
-
-        navigationController?.pushViewController(articleCollectionViewController, animated: true)
+        
+        parentCoordinator?.openSingleArticle(articles: articleViewModel.articles.value, index: indexPath.row)
     }
     
     

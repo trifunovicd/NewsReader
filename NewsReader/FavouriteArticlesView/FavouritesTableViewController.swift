@@ -18,6 +18,7 @@ class FavouritesTableViewController: UITableViewController {
     private let favoriteViewModel = FavoritesViewModel()
     private let bag = DisposeBag()
 
+    weak var parentCoordinator: FavoritesCoordinator?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +37,7 @@ class FavouritesTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        tabBarController?.navigationItem.title = "Favorites"
+        //tabBarController?.navigationItem.title = "Favorites"
         favoriteViewModel.favoritesRequest.onNext(())
     }
 
@@ -71,15 +72,7 @@ class FavouritesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let articleCollectionViewController = ArticleCollectionViewController(collectionViewLayout: layout)
-
-        let singleArticleViewModel = SingleArticleViewModel(articles:favoriteViewModel.favorites.value, index: indexPath.row)
-
-        articleCollectionViewController.singleArticleViewModel = singleArticleViewModel
-
-        navigationController?.pushViewController(articleCollectionViewController, animated: true)
+        parentCoordinator?.openSingleArticle(articles: favoriteViewModel.favorites.value, index: indexPath.row)
     }
     
 

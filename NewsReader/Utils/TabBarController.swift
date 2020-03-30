@@ -9,20 +9,19 @@
 import UIKit
 
 class TabBarController: UITabBarController {
-
+    let articlesCoordinator = ArticlesCoordinator(presenter: UINavigationController())
+    let favoritesCoordinator = FavoritesCoordinator(presenter: UINavigationController())
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        articlesCoordinator.start()
+        favoritesCoordinator.start()
         
-        let articlesTableViewController = ArticlesTableViewController()
-        articlesTableViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .mostRecent, tag: 0)
-
-        let favouritesTableViewController = FavouritesTableViewController()
-        favouritesTableViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 1)
-
-        let tabBarList = [articlesTableViewController, favouritesTableViewController]
+        let tabBarList = [articlesCoordinator.presenter, favoritesCoordinator.presenter]
 
         viewControllers = tabBarList
         
     }
-    
 }

@@ -18,7 +18,8 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
     var singleArticleViewModel: SingleArticleViewModel!
     
     private let bag = DisposeBag()
-
+    
+    weak var parentCoordinator: SingleArticleCoordinator?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,10 +93,7 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
     
     //MARK: Private Methods
     private func openInBrowser(articleUrl: String){
-        let webViewController = WebViewController()
-        let webViewViewModel = WebViewViewModel(url: articleUrl)
-        webViewController.webViewViewModel = webViewViewModel
-        navigationController?.pushViewController(webViewController, animated: true)
+        parentCoordinator?.openInBrowser(articleUrl: articleUrl)
     }
     
     private func setObserver() {

@@ -19,6 +19,8 @@ class WebViewController: UIViewController, WKNavigationDelegate {
     
     private let bag = DisposeBag()
     
+    weak var parentCoordinator: WebViewCoordinator?
+    
     
     override func loadView() {
         webView = WKWebView()
