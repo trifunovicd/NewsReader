@@ -1,5 +1,5 @@
 //
-//  WebView.swift
+//  SingleArticleDelegate.swift
 //  NewsReader
 //
 //  Created by Internship on 30/03/2020.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol WebView: AnyObject {
-    func openInBrowser(articleUrl: String)
+protocol SingleArticleDelegate: AnyObject {
+    func openSingleArticle(articles: [News], index: Int)
 }

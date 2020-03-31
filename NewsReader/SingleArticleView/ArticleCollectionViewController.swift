@@ -16,11 +16,9 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
 
     //MARK: Properties
     var singleArticleViewModel: SingleArticleViewModel!
-    
     private let bag = DisposeBag()
-    
-    weak var parentCoordinator: SingleArticleCoordinator?
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,6 +34,13 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
 
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if self.isMovingFromParent {
+            singleArticleViewModel.coordinatorDelegate?.viewControllerHasFinished()
+        }
+    }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
@@ -93,7 +98,7 @@ class ArticleCollectionViewController: UICollectionViewController, UICollectionV
     
     //MARK: Private Methods
     private func openInBrowser(articleUrl: String){
-        parentCoordinator?.openInBrowser(articleUrl: articleUrl)
+        singleArticleViewModel.coordinatorDelegate?.openInBrowser(articleUrl: articleUrl)
     }
     
     private func setObserver() {

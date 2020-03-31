@@ -17,13 +17,9 @@ private let cellIdentifier = "ArticleTableViewCell"
 class ArticlesTableViewController: UITableViewController {
     
     //MARK: Properties
-    private let articleViewModel = AllArticlesViewModel(observable: getRequest(url: Urls.articleUrl.rawValue))
-    
+    var articleViewModel: AllArticlesViewModel!
     private let myRefreshControl = UIRefreshControl()
-    
     private let bag = DisposeBag()
-    
-    weak var parentCoordinator: ArticlesCoordinator?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +39,6 @@ class ArticlesTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //tabBarController?.navigationItem.title = "Factory"
         reload(forceUpdate: RefreshType.general)
     }
     
@@ -76,7 +71,7 @@ class ArticlesTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        parentCoordinator?.openSingleArticle(articles: articleViewModel.articles.value, index: indexPath.row)
+        articleViewModel.coordinatorDelegate?.openSingleArticle(articles: articleViewModel.articles.value, index: indexPath.row)
     }
     
     

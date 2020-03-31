@@ -8,25 +8,36 @@
 
 import UIKit
 
-class ArticlesCoordinator: NSObject, Coordinator, UINavigationControllerDelegate, SingleArticle {
+class ArticlesCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     var presenter: UINavigationController
+    let controller: ArticlesTableViewController
     
     init(presenter: UINavigationController) {
         self.presenter = presenter
+        
+        let articleController = ArticlesTableViewController()
+        let viewModel = AllArticlesViewModel(observable: getRequest(url: Urls.articleUrl.rawValue))
+        articleController.articleViewModel = viewModel
+        articleController.tabBarItem = UITabBarItem(tabBarSystemItem: .mostRecent, tag: 0)
+        articleController.navigationItem.title = "Factory"
+        self.controller = articleController
     }
     
     func start() {
         setupNavigationBar()
-        presenter.delegate = self
-        
-        let vc = ArticlesTableViewController()
-        vc.tabBarItem = UITabBarItem(tabBarSystemItem: .mostRecent, tag: 0)
-        vc.navigationItem.title = "Factory"
-        vc.parentCoordinator = self
-        
-        presenter.pushViewController(vc, animated: false)
+        controller.articleViewModel.coordinatorDelegate = self
+        presenter.pushViewController(controller, animated: false)
     }
+    
+    private func setupNavigationBar() {
+        presenter.navigationBar.barTintColor = UIColor(red: 28.0/255.0, green: 68.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+        presenter.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        presenter.navigationBar.tintColor = UIColor.white
+    }
+}
+
+extension ArticlesCoordinator: SingleArticleDelegate {
     
     func openSingleArticle(articles: [News], index: Int) {
         let child = SingleArticleCoordinator(presenter: presenter, articles: articles, index: index)
@@ -34,37 +45,16 @@ class ArticlesCoordinator: NSObject, Coordinator, UINavigationControllerDelegate
         childCoordinators.append(child)
         child.start()
     }
+}
+
+extension ArticlesCoordinator: CoordinatorDelegate {
     
-    func childDidFinish(_ child: Coordinator?) {
+    func childDidFinish(child: Coordinator) {
         for (index, coordinator) in childCoordinators.enumerated() {
             if coordinator === child {
                 childCoordinators.remove(at: index)
                 break
             }
         }
-    }
-
-    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        // Read the view controller we’re moving from.
-        guard let fromViewController = navigationController.transitionCoordinator?.viewController(forKey: .from) else {
-            return
-        }
-
-        // Check whether our view controller array already contains that view controller. If it does it means we’re pushing a different view controller on top rather than popping it, so exit.
-        if navigationController.viewControllers.contains(fromViewController) {
-            return
-        }
-
-        // We’re still here – it means we’re popping the view controller, so we can check whether it’s a buy view controller
-        if let articleCollectionViewController = fromViewController as? ArticleCollectionViewController {
-            // We're popping a buy view controller; end its coordinator
-            childDidFinish(articleCollectionViewController.parentCoordinator)
-        }
-    }
-    
-    private func setupNavigationBar() {
-        presenter.navigationBar.barTintColor = UIColor(red: 28.0/255.0, green: 68.0/255.0, blue: 156.0/255.0, alpha: 1.0)
-        presenter.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        presenter.navigationBar.tintColor = UIColor.white
     }
 }

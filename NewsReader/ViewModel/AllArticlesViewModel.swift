@@ -20,20 +20,14 @@ class AllArticlesViewModel {
     
     //MARK: Properties
     var articlesPreview: BehaviorRelay<[ArticlePreview]> = BehaviorRelay<[ArticlePreview]>(value: [])
-    
     var articles: BehaviorRelay<[ArticleDetails]> = BehaviorRelay<[ArticleDetails]>(value: [])
-    
     let reloadRequest = PublishSubject<RefreshType>()
-    
     let endRefreshing = PublishSubject<Bool>()
-    
     let refreshTable = PublishSubject<Void>()
-    
     let alertOfError = PublishSubject<Bool>()
-    
     let favoritesAction = PublishSubject<ArticlePreview>()
-    
     let articleObservable: Observable<Articles>!
+    weak var coordinatorDelegate: SingleArticleDelegate?
     
     init(observable: Observable<Articles>) {
         self.articleObservable = observable
@@ -266,5 +260,3 @@ class AllArticlesViewModel {
         return onlineFetch
     }
 }
-
-

@@ -14,6 +14,7 @@ class WebViewViewModel {
     //MARK: Properties
     private let url: URL?
     let loadArticle = PublishSubject<URL>()
+    weak var coordinatorDelegate: ViewControllerDelegate?
     
     init(url: String) {
         self.url = URL(string: url)

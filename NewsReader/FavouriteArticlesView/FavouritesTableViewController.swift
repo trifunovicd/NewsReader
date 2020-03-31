@@ -15,10 +15,8 @@ private let cellIdentifier = "FavoriteTableViewCell"
 class FavouritesTableViewController: UITableViewController {
     
     //MARK: Properties
-    private let favoriteViewModel = FavoritesViewModel()
+    var favoriteViewModel: FavoritesViewModel!
     private let bag = DisposeBag()
-
-    weak var parentCoordinator: FavoritesCoordinator?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +35,6 @@ class FavouritesTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //tabBarController?.navigationItem.title = "Favorites"
         favoriteViewModel.favoritesRequest.onNext(())
     }
 
@@ -72,7 +69,7 @@ class FavouritesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        parentCoordinator?.openSingleArticle(articles: favoriteViewModel.favorites.value, index: indexPath.row)
+        favoriteViewModel.coordinatorDelegate?.openSingleArticle(articles: favoriteViewModel.favorites.value, index: indexPath.row)
     }
     
 

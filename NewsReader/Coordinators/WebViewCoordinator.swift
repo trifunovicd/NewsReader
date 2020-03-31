@@ -9,22 +9,32 @@
 import UIKit
 
 class WebViewCoordinator: Coordinator {
-    weak var parentCoordinator: WebView?
+    weak var parentCoordinator: CoordinatorDelegate?
     var childCoordinators: [Coordinator] = []
     var presenter: UINavigationController
-    
+    let controller: WebViewController
     let articleUrl: String
     
     init(presenter: UINavigationController, articleUrl: String) {
         self.presenter = presenter
         self.articleUrl = articleUrl
+        
+        let webViewController = WebViewController()
+        let viewModel = WebViewViewModel(url: articleUrl)
+        webViewController.webViewViewModel = viewModel
+        self.controller = webViewController
     }
     
     func start() {
-        let webViewController = WebViewController()
-        let webViewViewModel = WebViewViewModel(url: articleUrl)
-        webViewController.webViewViewModel = webViewViewModel
-        webViewController.parentCoordinator = self
-        presenter.pushViewController(webViewController, animated: true)
+        controller.webViewViewModel.coordinatorDelegate = self
+        presenter.pushViewController(controller, animated: true)
+    }
+}
+
+extension WebViewCoordinator: ViewControllerDelegate {
+    
+    func viewControllerHasFinished() {
+        childCoordinators.removeAll()
+        parentCoordinator?.childDidFinish(child: self)
     }
 }

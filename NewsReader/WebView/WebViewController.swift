@@ -14,12 +14,8 @@ class WebViewController: UIViewController, WKNavigationDelegate {
 
     //MARK: Properties
     private var webView: WKWebView!
-    
     var webViewViewModel: WebViewViewModel!
-    
     private let bag = DisposeBag()
-    
-    weak var parentCoordinator: WebViewCoordinator?
     
     
     override func loadView() {
@@ -35,6 +31,14 @@ class WebViewController: UIViewController, WKNavigationDelegate {
         
         webViewViewModel.loadNews()
         
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if self.isMovingFromParent {
+            webViewViewModel.coordinatorDelegate?.viewControllerHasFinished()
+        }
     }
 
     //MARK: Private Methods

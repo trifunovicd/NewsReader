@@ -15,6 +15,7 @@ class SingleArticleViewModel {
     let articles: [News]
     let index: Int
     let scrollToItem = PublishSubject<IndexPath>()
+    weak var coordinatorDelegate: (WebViewDelegate & ViewControllerDelegate)?
     
     init(articles: [News], index: Int) {
         self.articles = articles

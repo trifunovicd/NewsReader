@@ -15,14 +15,11 @@ class FavoritesViewModel {
     
     //MARK: Properties
     var articlesPreview: BehaviorRelay<[ArticlePreview]> = BehaviorRelay<[ArticlePreview]>(value: [])
-    
     var favorites: BehaviorRelay<[Favorite]> = BehaviorRelay<[Favorite]>(value: [])
-    
     let favoritesRequest =  PublishSubject<Void>()
-    
     let refreshTable = PublishSubject<Void>()
-    
     let removeFromFavorites = PublishSubject<ArticlePreview>()
+    weak var coordinatorDelegate: SingleArticleDelegate?
     
     
     //MARK: Private Methods
@@ -97,5 +94,3 @@ class FavoritesViewModel {
         }
     }
 }
-
-
