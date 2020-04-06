@@ -23,7 +23,6 @@
 		B92534F924372D4F00EEEB3C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92534F824372D4F00EEEB3C /* AppCoordinator.swift */; };
 		B948A95A241B76EA00EAF36F /* SingleArticleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B948A959241B76EA00EAF36F /* SingleArticleViewModel.swift */; };
 		B948A95D241BC3D500EAF36F /* FavouritesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B948A95C241BC3D500EAF36F /* FavouritesTableViewController.swift */; };
-		B948A95F241BC46100EAF36F /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B948A95E241BC46100EAF36F /* TabBarController.swift */; };
 		B961792F240CE70B00E534E1 /* ArticleCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B961792E240CE70B00E534E1 /* ArticleCollectionViewController.swift */; };
 		B96C2FA4240514B20039C10B /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA3240514B20039C10B /* Article.swift */; };
 		B96C2FA6240515D50039C10B /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96C2FA5240515D50039C10B /* Request.swift */; };
@@ -92,7 +91,6 @@
 		B92534F824372D4F00EEEB3C /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		B948A959241B76EA00EAF36F /* SingleArticleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleArticleViewModel.swift; sourceTree = "<group>"; };
 		B948A95C241BC3D500EAF36F /* FavouritesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesTableViewController.swift; sourceTree = "<group>"; };
-		B948A95E241BC46100EAF36F /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		B961792E240CE70B00E534E1 /* ArticleCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewController.swift; sourceTree = "<group>"; };
 		B96C2FA3240514B20039C10B /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		B96C2FA5240515D50039C10B /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
@@ -321,7 +319,6 @@
 			children = (
 				B96C2FA5240515D50039C10B /* Request.swift */,
 				B96C2FAB240548610039C10B /* CustomImageView.swift */,
-				B948A95E241BC46100EAF36F /* TabBarController.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -605,7 +602,6 @@
 				B96C2FAC240548610039C10B /* CustomImageView.swift in Sources */,
 				B96C2FAA240528DE0039C10B /* ArticleTableViewCell.swift in Sources */,
 				B905592B24322F50000AF372 /* WebViewCoordinator.swift in Sources */,
-				B948A95F241BC46100EAF36F /* TabBarController.swift in Sources */,
 				B96C2FA6240515D50039C10B /* Request.swift in Sources */,
 				B948A95D241BC3D500EAF36F /* FavouritesTableViewController.swift in Sources */,
 			);
@@ -787,6 +783,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = NewsReader/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -805,6 +802,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = NewsReader/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
